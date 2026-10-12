@@ -1,0 +1,27 @@
+{
+  "name": "pos-ia-m03-d02-crm-memoria",
+  "version": "1.0.0",
+  "description": "Micro-capstone: assistente de CRM B2B com memória persistente de cliente (SQLite), recuperação relevante, guardrails e comparação com/sem memória.",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env src/index.ts",
+    "seed": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env src/seed.ts",
+    "experiment": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env src/experiment/runExperiment.ts",
+    "demo": "node --disable-warning=ExperimentalWarning src/demo/runDemo.ts",
+    "test": "node --disable-warning=ExperimentalWarning --test \"tests/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "env:setup": "node -e \"require('fs').copyFileSync('.env.example', '.env')\""
+  },
+  "dependencies": {
+    "openai": "^6.49.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  },
+  "license": "ISC"
+}

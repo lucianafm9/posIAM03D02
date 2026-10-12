@@ -1,0 +1,51 @@
+{
+  "clients": [
+    {
+      "id": "alvorada",
+      "name": "Construtora Alvorada",
+      "segment": "construção civil",
+      "contactName": "Marina Lopes",
+      "contactRole": "Gerente de TI",
+      "customerSince": "2022-03",
+      "memories": [
+        { "type": "pedido", "importance": 2, "date": "2025-12-20", "content": "Tem contrato de suporte gerenciado 8x5 para 120 usuários, vigente até 2026-12-31." },
+        { "type": "pedido", "importance": 2, "date": "2026-03-15", "content": "Renovou 50 licenças Microsoft 365 Business Standard em 2026-03-15, com vigência até 2027-03-14." },
+        { "type": "pedido", "importance": 2, "date": "2026-06-20", "content": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte." },
+        { "type": "preferencia", "importance": 3, "date": "2024-05-10", "content": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos." },
+        { "type": "preferencia", "importance": 2, "date": "2026-06-20", "content": "Pede que toda proposta destaque o prazo de entrega, por causa do atraso no pedido PED-2291." },
+        { "type": "problema", "importance": 2, "date": "2026-08-22", "content": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro." },
+        { "type": "relacionamento", "importance": 2, "date": "2026-07-10", "content": "A renovação do contrato de suporte (vence em 2026-12-31) está em negociação; a cliente é sensível a prazos (NPS 7 em julho de 2026)." },
+        { "type": "relacionamento", "importance": 1, "date": "2025-11-05", "content": "Marina participou do evento de clientes NexoTech em 2025 e elogiou a palestra sobre backup em nuvem." }
+      ]
+    },
+    {
+      "id": "bemviver",
+      "name": "Clínica Bem Viver",
+      "segment": "saúde (clínica médica)",
+      "contactName": "Rafael Souza",
+      "contactRole": "Sócio-administrador",
+      "customerSince": "2025-02",
+      "memories": [
+        { "type": "pedido", "importance": 2, "date": "2025-02-10", "content": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro." },
+        { "type": "pedido", "importance": 2, "date": "2025-03-05", "content": "Comprou 10 desktops para a recepção e os consultórios em 2025-03-05 (pedido PED-1877)." },
+        { "type": "preferencia", "importance": 3, "date": "2025-02-10", "content": "Prefere contato por WhatsApp e linguagem simples, sem termos técnicos." },
+        { "type": "problema", "importance": 2, "date": "2026-07-06", "content": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06." },
+        { "type": "problema", "importance": 2, "date": "2026-09-15", "content": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15." },
+        { "type": "relacionamento", "importance": 2, "date": "2026-05-20", "content": "Avalia abrir uma segunda unidade em 2027 e pediu para ser lembrado das opções de expansão da rede." }
+      ]
+    },
+    {
+      "id": "rotasul",
+      "name": "Logística Rota Sul",
+      "segment": "transporte e logística",
+      "contactName": "Patrícia Nunes",
+      "contactRole": "Coordenadora administrativa",
+      "customerSince": "2023-08",
+      "memories": [
+        { "type": "pedido", "importance": 2, "date": "2026-01-12", "content": "Contratou 30 licenças de antivírus gerenciado em 2026-01-12." },
+        { "type": "preferencia", "importance": 3, "date": "2023-08-20", "content": "Prefere ligações telefônicas, no período da tarde." },
+        { "type": "problema", "importance": 2, "date": "2026-04-02", "content": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe." }
+      ]
+    }
+  ]
+}

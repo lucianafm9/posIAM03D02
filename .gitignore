@@ -1,0 +1,11 @@
+node_modules
+.DS_Store
+
+# variáveis de ambiente (nunca versionar chaves de API)
+.env
+.env.*
+!.env.example
+
+# banco SQLite local (contém as conversas e memórias dos atendimentos)
+data/*.db
+data/*.db-*
