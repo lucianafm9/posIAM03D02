@@ -6,7 +6,7 @@ import { rankMemories, retrieveMemories } from "../src/memory/retrieveMemories.t
 import { keywordScore } from "../src/memory/scoring.ts";
 import { memory, seededDb } from "./helpers.ts";
 
-const settings = { topK: 2, minScore: 0.35, minKeywordScore: 0.5, semanticWeight: 0.7, maxTokens: 450, maxEssentials: 3 };
+const settings = { topK: 2, minScore: 0.35, relativeRatio: 0.6, minRelativeScore: 0.15, minKeywordScore: 0.5, semanticWeight: 0.7, maxTokens: 450, maxEssentials: 3 };
 
 describe("keywordScore", () => {
   it("ignora acentos, stopwords e variações simples de plural", () => {
@@ -37,6 +37,28 @@ describe("rankMemories (recuperação relevante)", () => {
     assert.ok(contents.includes("Comprou 20 notebooks Dell Latitude 5450 em junho."));
     assert.ok(!contents.some((c) => c.includes("palestra")), "memória irrelevante fica de fora");
     assert.ok(result.discarded.length >= 1);
+  });
+
+  it("corte relativo: aceita a memória que se destaca mesmo abaixo do corte absoluto, e nada quando tudo é fraco", () => {
+    const withScore = (content: string, semantic: number) => ({ ...memory({ content }), embedding: [semantic, Math.sqrt(1 - semantic ** 2)] });
+    const query = [1, 0];
+    // scores = 0,7 × semântico: 0,28 · 0,21 · 0,035, todos abaixo do corte absoluto (0,35)
+    const memories = [withScore("destaque", 0.4), withScore("média", 0.3), withScore("fraca", 0.05)];
+
+    const result = rankMemories(memories, "xyz", query, settings);
+    assert.deepEqual(result.selected.map((s) => s.memory.content), ["destaque", "média"], "0,21 >= 60% de 0,28; a fraca fica de fora");
+
+    const weak = rankMemories([withScore("a", 0.1), withScore("b", 0.09)], "xyz", query, settings);
+    assert.equal(weak.selected.length, 0, "abaixo do piso nada entra, mesmo sendo a melhor");
+  });
+
+  it("palavra-chave da mensagem atual não é diluída pela mensagem anterior", async () => {
+    const vpn = memory({ content: "Relatou lentidão na VPN de Sorocaba." });
+    const query = "Mensagem anterior longa sobre proposta de notebooks para a obra de Campinas em novembro\nA VPN de Sorocaba está lenta";
+    const diluted = rankMemories([vpn], query, null, settings).selected.length;
+    const focused = rankMemories([vpn], query, null, settings, "A VPN de Sorocaba está lenta").selected.length;
+    assert.equal(diluted, 0);
+    assert.equal(focused, 1);
   });
 
   it("respeita o orçamento de tokens do bloco de memória", async () => {

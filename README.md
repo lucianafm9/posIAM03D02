@@ -49,8 +49,9 @@ npm start              # abre o atendimento
 | `npm start -- --modo=sem_memoria` | Mesmo atendimento sem memória (`sem_memoria`, `curta`, `completa`, `sem_filtro`) | sim |
 | `npm run seed` | Recria o banco local com o CRM de exemplo (apaga conversas e memórias) | sim (embeddings) |
 | `npm run experiment` | Executa a comparação entre os 4 modos e gera `results/relatorio.md` | sim |
+| `npm run simulate` | Avaliação de contexto: o que chega ao modelo em cada modo (respostas simuladas; ver [resultados](#resultados-avaliação-de-contexto-simulação-sem-chave-de-api)) | **não** |
 | `npm run demo` | Demonstra o tratamento de erros e a autocrítica com modelo simulado | **não** |
-| `npm test` | 39 testes automatizados (modelo e embeddings simulados) | **não** |
+| `npm test` | 41 testes automatizados (modelo e embeddings simulados) | **não** |
 | `npm run typecheck` | Checagem de tipos | não |
 
 Variáveis do `.env`: `OPENAI_API_KEY` (obrigatória), `OPENAI_MODEL` (opcional, padrão `gpt-4o-mini`) e
@@ -221,10 +222,10 @@ continua no contexto pelo resumo, e a retomada restaura só as mensagens não re
 
 [`src/memory/retrieveMemories.ts`](src/memory/retrieveMemories.ts), sobre as memórias **ativas do cliente atual** (o filtro por `client_id` está no SQL):
 
-1. **Consulta contextual**: mensagem atual + mensagem anterior do cliente (follow-ups curtos como "pode ser o mesmo modelo" precisam do contexto para achar a memória certa).
+1. **Consulta contextual**: mensagem atual + mensagem anterior do cliente (follow-ups curtos como "pode ser o mesmo modelo" precisam do contexto para achar a memória certa). Para que o contexto não dilua a mensagem atual, a similaridade e a palavra-chave usam o **maior valor** entre a consulta contextual e a mensagem atual sozinha.
 2. **Score híbrido** (como no RAG das aulas): `0,7 × similaridade de cosseno` (embeddings `text-embedding-3-small`) `+ 0,3 × palavra-chave` (termos normalizados, sem acento e sem stopwords).
 3. **Essenciais**: preferências de importância 3 (ex.: canal de contato) entram sempre, até 3.
-4. **Relevantes**: score ≥ 0,35, no máximo 5, ordenadas por score, importância e data.
+4. **Relevantes**: no máximo 5, ordenadas por score, importância e data. Uma memória entra se passar do **corte absoluto** (score ≥ 0,35) **ou** do **corte relativo**: score ≥ 60% do melhor score da mensagem e ≥ 0,15. O corte relativo não depende da escala do modelo de embeddings (o que importa é a memória se destacar das demais), e o piso impede que a "melhor das ruins" entre quando nada é relevante.
 5. **Orçamento**: o bloco de memória respeita ~450 tokens (`estimateTokens`). O que não cabe é descartado.
 6. **Degradação**: se a API de embeddings falhar, a relevância vem só de palavras-chave, com corte mais exigente (≥ 0,5).
 
@@ -406,14 +407,88 @@ os turnos que variaram entre as execuções, a evolução da memória (memórias
 Os dados brutos ficam em [`results/experimento.json`](results/experimento.json). Os dois arquivos são gerados ao
 executar o experimento com uma chave válida.
 
+### Resultados: avaliação de contexto (simulação, sem chave de API)
+
+`npm run simulate` gera [`results/simulacao-contexto.md`](results/simulacao-contexto.md) (dados em
+[`results/simulacao-contexto.json`](results/simulacao-contexto.json)).
+
+> **O que esta avaliação mede, e o que não mede.** O código real do assistente roda em cada modo (recuperação,
+> janela, compressão, costura do contexto, extração e persistência) e o **contexto exato que seria enviado ao
+> modelo** é verificado em cada mensagem. As partes que dependem do modelo são simuladas:
+> - **respostas:** texto neutro do tamanho de uma resposta real;
+> - **resumos:** extrativos, com as frases do cliente;
+> - **extração de memória:** um gabarito com o que um extrator correto registraria ([`contextSpec.ts`](src/experiment/contextSpec.ts));
+> - **embeddings:** locais, por palavras.
+>
+> Portanto ela mede **a arquitetura de memória: se a informação certa chega ao modelo, e sem ruído**. Não mede a
+> qualidade das respostas, que depende do modelo real (ver o próximo item).
+
+Para cada mensagem, o gabarito define os **fatos necessários** (o que o modelo precisa ter no contexto para
+responder bem) e o **ruído** (memória sem relação com a mensagem, desatualizada ou de outro cliente).
+
+| Modo | Fatos necessários no contexto | Mensagens com ruído | Tokens de contexto (média) | Memórias injetadas (média) | Compressões |
+|---|---|---|---|---|---|
+| Sem memória | **0/15 (0%)** | 0 | 458 | 0,0 | 0 |
+| Só memória curta | **3/15 (20%)** | 0 | 867 | 0,0 | 2 |
+| **Memória completa (proposta)** | **12/15 (80%)** | **0** | 1.354 | 2,3 | 2 |
+| Sem filtro | **15/15 (100%)** | **6** (A1, A2, A3, A4, B2, B4) | 1.530 | 6,1 | 2 |
+
+Por mensagem (✅/⚠️/❌ = fatos necessários presentes · 🔸 = ruído · ⚡ = compressão antes da mensagem · tk = tokens de contexto):
+
+| Turno | Sem memória | Só memória curta | Memória completa | Sem filtro |
+|---|---|---|---|---|
+| A1 | ❌ 0/3 · 476 tk | ❌ 0/3 · 476 tk | ⚠️ 1/3 · 871 tk | ✅ 3/3 · 🔸 evento de 2025, chamado de VPN · 1215 tk |
+| A2 | ❌ 0/1 · 439 tk | ❌ 0/1 · 768 tk | ❌ 0/1 · 1212 tk | ✅ 1/1 · 🔸 evento de 2025 · 1556 tk |
+| A3 | ❌ 0/2 · 451 tk | ❌ 0/2 · 451 tk | ✅ 2/2 · 1026 tk | ✅ 2/2 · 🔸 evento de 2025 · 1328 tk |
+| A4 | ❌ 0/1 · 451 tk | ❌ 0/1 · 755 tk | ✅ 1/1 · 1349 tk | ✅ 1/1 · 🔸 evento de 2025, licenças · 1632 tk |
+| A5 | 452 tk | 1060 tk | 1598 tk | 1937 tk |
+| B1 | 464 tk | 464 tk | 858 tk | 1091 tk |
+| B2 | 449 tk | 765 tk | 1220 tk | 🔸 cobrança duplicada, segunda unidade, desktops · 1409 tk |
+| B3 | ❌ 0/2 · 447 tk | ❌ 0/2 · 447 tk | ✅ 2/2 · 980 tk | ✅ 2/2 · 1169 tk |
+| B4 | ❌ 0/1 · 441 tk | ❌ 0/1 · 740 tk | ✅ 1/1 · 1378 tk | ✅ 1/1 · 🔸 segunda unidade · 1462 tk |
+| B5 | 457 tk | 1049 tk | 1538 tk | 1771 tk |
+| C1 | ❌ 0/1 · 485 tk | ❌ 0/1 · 485 tk | ✅ 1/1 · 923 tk | ✅ 1/1 · 953 tk |
+| C2 a C4 | ~460 tk | 793 → 1411 tk | 1231 → 1903 tk | 1308 → 1934 tk |
+| C5 | 454 tk | ⚡ 1191 tk | ⚡ 1665 tk | ⚡ 1742 tk |
+| C6 | ❌ 0/1 · 471 tk | ❌ 0/1 · 1510 tk | ✅ 1/1 · 1930 tk | ✅ 1/1 · 2061 tk |
+| C7 | ❌ 0/3 · 465 tk | ✅ 3/3 · ⚡ 1269 tk | ✅ 3/3 · ⚡ 1789 tk | ✅ 3/3 · ⚡ 1820 tk |
+
+**Análise**
+
+- **Sem memória, o assistente não tem como personalizar.** Nenhum fato necessário chega ao modelo: a resposta ideal é impossível nas 9 mensagens (de 17) que dependem de histórico.
+- **A memória curta resolve só a continuidade dentro do atendimento.** Ela acerta o C7 (detalhes do início da conversa longa), mas não sabe nada que foi dito em outro atendimento (A3, B3) nem o histórico do CRM (A4, B4).
+- **A memória completa entrega 80% dos fatos necessários com zero ruído.** Em média, injeta 2,3 memórias por mensagem.
+  - Lembra o pedido combinado em outro atendimento (A3).
+  - Reconhece o incidente recorrente (A4).
+  - Usa a preferência **atualizada** e não a antiga (B3): a preferência por WhatsApp foi substituída em B1 e não voltou ao contexto.
+  - Recupera o problema certo (B4).
+  - Não leva nada irrelevante à pergunta genérica (B2).
+  - Não leva dados de outro cliente (A5 e B5, em todos os modos).
+- **Sem filtro, o modelo recebe tudo, inclusive o que atrapalha.** Chega a 100% dos fatos, mas leva ruído a 6 mensagens (por exemplo, cobrança duplicada e segunda unidade numa dúvida sobre tipos de backup) e gasta ~13% mais tokens. A diferença é pequena aqui porque o CRM de exemplo tem só 17 memórias. Num CRM real, com centenas de memórias por cliente, o modo sem filtro estouraria o orçamento, enquanto o modo completa continua limitado por `topK` e ~450 tokens.
+- **A compressão funciona.** No C5, antes da mensagem, a memória curta passou do orçamento e a metade antiga virou resumo (no modo curta, o contexto foi de 1.411 tokens no C4 para 1.191 no C5, mesmo com uma interação a mais). No C7, os três detalhes ditos no início (40 pessoas, depois das 19h, Canoas) continuaram disponíveis pelo resumo, inclusive no modo curta, que não tem memória de longo prazo.
+- **O que faltou (A1 e A2).** Ligar "mesmo modelo da última compra" ao pedido de notebooks Dell Latitude 5450 exige similaridade semântica. Os embeddings locais da simulação comparam só palavras, então as notas ficaram abaixo do piso. Isso precisa ser confirmado com os embeddings reais (`text-embedding-3-small`).
+
+**O que a simulação revelou e foi corrigido.** A primeira execução entregava só 8 dos 15 fatos no modo completa.
+- **Dois defeitos reais da recuperação:**
+  - A consulta contextual (mensagem anterior + atual) diluía a nota da mensagem atual e derrubava memórias claramente relevantes (A4, B4, C1). A palavra-chave e a similaridade passaram a usar o **maior valor** entre a mensagem atual e a consulta contextual.
+  - O corte absoluto de 0,35 dependia da escala do modelo de embeddings. Foi complementado por um **corte relativo** (ver [Lógica de recuperação](#lógica-de-recuperação)).
+- **Um artefato do próprio simulador:** o resumo extrativo cortava o resumo anterior e fazia "Canoas" sumir no C7.
+
+Com as correções, o resultado foi para 12 de 15 fatos, sem nenhum ruído novo.
+
+### Resultados: experimento com o modelo real (respostas e juiz)
+
+**Pendente:** depende de uma chave da OpenAI. `npm run experiment` gera [`results/relatorio.md`](results/relatorio.md)
+com a qualidade das respostas em cada modo, avaliadas pelas checagens e pelo juiz, em 3 execuções.
+
 ## Critérios de aceitação e evidências
 
 | Critério / evidência | Como o projeto atende | Onde verificar |
 |---|---|---|
 | Memória é realmente utilizada nas respostas | Memórias relevantes entram no contexto a cada mensagem; o juiz classifica o uso como correto, ausente ou incorreto | `--debug`; relatório (coluna "Memória usada corretamente"; memórias injetadas por turno) |
-| Respostas melhoram com histórico | Mesmo cenário em 4 modos: aprovação e nota por modo | Relatório, "Resumo por modo" e turnos A2, A3, A4, B3, B4 |
-| Não há uso incorreto ou irrelevante | Recuperação filtrada e com orçamento, regras no prompt, autocrítica, isolamento por cliente, guardrails | Turnos A5, B2 e B5; modo `sem_filtro` como contraponto; testes `retrieveMemories` e `crmAssistant` |
-| Sistema mantém consistência ao longo do tempo | `ATUALIZAR` com `supersedes`; histórico só com interações íntegras | Turnos B1 → B3; "Evolução da memória" no relatório; testes `longTermMemory` |
+| Respostas melhoram com histórico | Mesmo cenário em 4 modos: fatos necessários que chegam ao modelo (simulação) e aprovação e nota por modo (experimento real) | [Resultados da avaliação de contexto](#resultados-avaliação-de-contexto-simulação-sem-chave-de-api): 0% sem memória x 80% com memória completa; relatório do experimento real |
+| Não há uso incorreto ou irrelevante | Recuperação filtrada e com orçamento, regras no prompt, autocrítica, isolamento por cliente, guardrails | Avaliação de contexto: zero ruído no modo completa x 6 mensagens com ruído sem filtro; turnos A5, B2 e B5; testes `retrieveMemories` e `crmAssistant` |
+| Sistema mantém consistência ao longo do tempo | `ATUALIZAR` com `supersedes`; histórico só com interações íntegras | Turnos B1 → B3 (a preferência antiga não volta ao contexto); "Evolução da memória" no relatório; testes `longTermMemory` |
 | Entendimento de statefulness | 3 níveis de memória (sessão, fatos, episódios); retomada de sessão a partir do SQLite; modo stateless como linha de base | Seção [Arquitetura da memória](#arquitetura-da-memória); `npm start` → retomar atendimento |
 | Uso eficiente de contexto | Orçamento de memória (~450 tokens), compressão da sessão (~1.200 tokens ou 20 mensagens), tokens medidos por turno | Relatório, "Uso eficiente de contexto" (`completa` x `sem_filtro`) e "Compressão da memória curta" (cenário C); seção [Estratégia de compressão](#estratégia-de-compressão-da-memória-curta) |
 | Melhoria real na experiência | O cliente não repete informações, preferências são respeitadas e problemas recorrentes são reconhecidos | Transcrições do relatório |
@@ -445,7 +520,7 @@ src/
   guardrails/              validação de entrada, saída e memória
   llm/                     cliente OpenAI e modelo simulado (testes/demo)
   cli/                     leitura de linhas e sessão interativa
-  experiment/              cenários, juiz, execução e relatório da comparação
+  experiment/              cenários, juiz, execução e relatório da comparação; avaliação de contexto (simulação)
   demo/                    demonstração de erros e autocrítica (sem chave)
   utils/                   erros, retentativas
 assets/                    imagem da arquitetura

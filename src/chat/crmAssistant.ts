@@ -297,6 +297,7 @@ export class CrmAssistant {
     return retrieveMemories({
       memories: active,
       query,
+      currentMessage: message,
       embed: (text) => withRetry(() => this.deps.embedder.embed(text), retryPolicy(this.deps.out, "Falha na busca semântica", this.deps.sleep)),
       onDegraded: (error) =>
         this.deps.out.write(`[Memória: busca semântica indisponível (${describeError(error)}). Usando só palavras-chave.]\n`),

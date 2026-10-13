@@ -22,8 +22,12 @@ export const SETTINGS = {
   longTerm: {
     /** Máximo de memórias recuperadas por relevância a cada mensagem. */
     topK: 5,
-    /** Relevância mínima (0 a 1) para uma memória entrar no contexto. */
+    /** Corte absoluto: com score >= minScore (0 a 1) a memória entra no contexto. */
     minScore: 0.35,
+    /** Corte relativo: também entra quem tiver score >= 60% do melhor score da mensagem... */
+    relativeRatio: 0.6,
+    /** ...desde que acima deste piso (evita injetar a "melhor das ruins" quando nada é relevante). */
+    minRelativeScore: 0.15,
     /** Sem embeddings (falha na API), a relevância vem só das palavras-chave, que exigem nota maior. */
     minKeywordScore: 0.5,
     /** Peso da similaridade semântica no score híbrido (o restante é palavra-chave). */

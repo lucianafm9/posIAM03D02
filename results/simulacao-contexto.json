@@ -1,0 +1,1158 @@
+{
+  "geradoEm": "2026-10-13T01:31:37.643Z",
+  "configuracao": {
+    "defaultModel": "gpt-4o-mini",
+    "embeddingModel": "text-embedding-3-small",
+    "databaseFile": "data/crm-memoria.db",
+    "requestTimeoutMs": 60000,
+    "retry": {
+      "maxAttempts": 3,
+      "baseDelayMs": 1000,
+      "maxDelayMs": 8000
+    },
+    "charsPerToken": 3,
+    "shortTerm": {
+      "maxTurns": 10,
+      "maxTokens": 1200
+    },
+    "longTerm": {
+      "topK": 5,
+      "minScore": 0.35,
+      "relativeRatio": 0.6,
+      "minRelativeScore": 0.15,
+      "minKeywordScore": 0.5,
+      "semanticWeight": 0.7,
+      "maxTokens": 450,
+      "maxEssentials": 3,
+      "maxExistingForExtraction": 40
+    },
+    "episodic": {
+      "lastSessions": 2
+    },
+    "limits": {
+      "maxMessageChars": 2000,
+      "maxMemoryChars": 300
+    },
+    "exitWords": [
+      "sair",
+      "exit",
+      "quit"
+    ]
+  },
+  "modos": [
+    {
+      "modo": "sem_memoria",
+      "turnos": [
+        {
+          "turno": "A1",
+          "tokensContexto": 476,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "preferência: prazo de entrega em destaque",
+              "presente": false
+            },
+            {
+              "desc": "preferência: retorno por e-mail",
+              "presente": false
+            },
+            {
+              "desc": "última compra: Dell Latitude 5450",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": false
+            },
+            {
+              "desc": "chamado de VPN (sem relação)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "A2",
+          "tokensContexto": 439,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "modelo da última compra: Dell Latitude 5450",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "A3",
+          "tokensContexto": 451,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "pedido combinado na sessão anterior: 15 notebooks",
+              "presente": false
+            },
+            {
+              "desc": "obra de Campinas",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "A4",
+          "tokensContexto": 451,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "incidente anterior: chamado CH-4471",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": false
+            },
+            {
+              "desc": "licenças (sem relação)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "A5",
+          "tokensContexto": 452,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": [
+            {
+              "desc": "dados de outro cliente (Rota Sul)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B1",
+          "tokensContexto": 464,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "B2",
+          "tokensContexto": 449,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": [
+            {
+              "desc": "cobrança duplicada (sem relação)",
+              "presente": false
+            },
+            {
+              "desc": "segunda unidade (sem relação)",
+              "presente": false
+            },
+            {
+              "desc": "desktops (sem relação)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B3",
+          "tokensContexto": 447,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "preferência atualizada: e-mail",
+              "presente": false
+            },
+            {
+              "desc": "renovação em fevereiro",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "preferência desatualizada (WhatsApp)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B4",
+          "tokensContexto": 441,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "cobrança duplicada e estorno",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "segunda unidade (sem relação)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B5",
+          "tokensContexto": 457,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": [
+            {
+              "desc": "dados da Construtora Alvorada",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "C1",
+          "tokensContexto": 485,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "pedido de treinamento após o phishing de abril",
+              "presente": false
+            }
+          ],
+          "ruidos": []
+        },
+        {
+          "turno": "C2",
+          "tokensContexto": 460,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C3",
+          "tokensContexto": 458,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C4",
+          "tokensContexto": 464,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C5",
+          "tokensContexto": 454,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C6",
+          "tokensContexto": 471,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "preferência: telefone à tarde",
+              "presente": false
+            }
+          ],
+          "ruidos": []
+        },
+        {
+          "turno": "C7",
+          "tokensContexto": 465,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "40 pessoas (dito no início)",
+              "presente": false
+            },
+            {
+              "desc": "turno da noite, após 19h (dito no início)",
+              "presente": false
+            },
+            {
+              "desc": "galpão de Canoas (dito no início)",
+              "presente": false
+            }
+          ],
+          "ruidos": []
+        }
+      ]
+    },
+    {
+      "modo": "curta",
+      "turnos": [
+        {
+          "turno": "A1",
+          "tokensContexto": 476,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "preferência: prazo de entrega em destaque",
+              "presente": false
+            },
+            {
+              "desc": "preferência: retorno por e-mail",
+              "presente": false
+            },
+            {
+              "desc": "última compra: Dell Latitude 5450",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": false
+            },
+            {
+              "desc": "chamado de VPN (sem relação)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "A2",
+          "tokensContexto": 768,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "modelo da última compra: Dell Latitude 5450",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "A3",
+          "tokensContexto": 451,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "pedido combinado na sessão anterior: 15 notebooks",
+              "presente": false
+            },
+            {
+              "desc": "obra de Campinas",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "A4",
+          "tokensContexto": 755,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "incidente anterior: chamado CH-4471",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": false
+            },
+            {
+              "desc": "licenças (sem relação)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "A5",
+          "tokensContexto": 1060,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": [
+            {
+              "desc": "dados de outro cliente (Rota Sul)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B1",
+          "tokensContexto": 464,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "B2",
+          "tokensContexto": 765,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": [
+            {
+              "desc": "cobrança duplicada (sem relação)",
+              "presente": false
+            },
+            {
+              "desc": "segunda unidade (sem relação)",
+              "presente": false
+            },
+            {
+              "desc": "desktops (sem relação)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B3",
+          "tokensContexto": 447,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "preferência atualizada: e-mail",
+              "presente": false
+            },
+            {
+              "desc": "renovação em fevereiro",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "preferência desatualizada (WhatsApp)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B4",
+          "tokensContexto": 740,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "cobrança duplicada e estorno",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "segunda unidade (sem relação)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B5",
+          "tokensContexto": 1049,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": [
+            {
+              "desc": "dados da Construtora Alvorada",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "C1",
+          "tokensContexto": 485,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "pedido de treinamento após o phishing de abril",
+              "presente": false
+            }
+          ],
+          "ruidos": []
+        },
+        {
+          "turno": "C2",
+          "tokensContexto": 793,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C3",
+          "tokensContexto": 1099,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C4",
+          "tokensContexto": 1411,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C5",
+          "tokensContexto": 1191,
+          "memoriasInjetadas": 0,
+          "compressao": {
+            "trigger": "tokens",
+            "summarizedMessages": 4,
+            "tokensBefore": 1259,
+            "tokensAfter": 703
+          },
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C6",
+          "tokensContexto": 1510,
+          "memoriasInjetadas": 0,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "preferência: telefone à tarde",
+              "presente": false
+            }
+          ],
+          "ruidos": []
+        },
+        {
+          "turno": "C7",
+          "tokensContexto": 1269,
+          "memoriasInjetadas": 0,
+          "compressao": {
+            "trigger": "tokens",
+            "summarizedMessages": 4,
+            "tokensBefore": 1324,
+            "tokensAfter": 769
+          },
+          "necessarios": [
+            {
+              "desc": "40 pessoas (dito no início)",
+              "presente": true
+            },
+            {
+              "desc": "turno da noite, após 19h (dito no início)",
+              "presente": true
+            },
+            {
+              "desc": "galpão de Canoas (dito no início)",
+              "presente": true
+            }
+          ],
+          "ruidos": []
+        }
+      ]
+    },
+    {
+      "modo": "completa",
+      "turnos": [
+        {
+          "turno": "A1",
+          "tokensContexto": 871,
+          "memoriasInjetadas": 1,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "preferência: prazo de entrega em destaque",
+              "presente": false
+            },
+            {
+              "desc": "preferência: retorno por e-mail",
+              "presente": true
+            },
+            {
+              "desc": "última compra: Dell Latitude 5450",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": false
+            },
+            {
+              "desc": "chamado de VPN (sem relação)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "A2",
+          "tokensContexto": 1212,
+          "memoriasInjetadas": 2,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "modelo da última compra: Dell Latitude 5450",
+              "presente": false
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "A3",
+          "tokensContexto": 1026,
+          "memoriasInjetadas": 3,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "pedido combinado na sessão anterior: 15 notebooks",
+              "presente": true
+            },
+            {
+              "desc": "obra de Campinas",
+              "presente": true
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "A4",
+          "tokensContexto": 1349,
+          "memoriasInjetadas": 3,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "incidente anterior: chamado CH-4471",
+              "presente": true
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": false
+            },
+            {
+              "desc": "licenças (sem relação)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "A5",
+          "tokensContexto": 1598,
+          "memoriasInjetadas": 2,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": [
+            {
+              "desc": "dados de outro cliente (Rota Sul)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B1",
+          "tokensContexto": 858,
+          "memoriasInjetadas": 1,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "B2",
+          "tokensContexto": 1220,
+          "memoriasInjetadas": 2,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": [
+            {
+              "desc": "cobrança duplicada (sem relação)",
+              "presente": false
+            },
+            {
+              "desc": "segunda unidade (sem relação)",
+              "presente": false
+            },
+            {
+              "desc": "desktops (sem relação)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B3",
+          "tokensContexto": 980,
+          "memoriasInjetadas": 2,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "preferência atualizada: e-mail",
+              "presente": true
+            },
+            {
+              "desc": "renovação em fevereiro",
+              "presente": true
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "preferência desatualizada (WhatsApp)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B4",
+          "tokensContexto": 1378,
+          "memoriasInjetadas": 4,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "cobrança duplicada e estorno",
+              "presente": true
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "segunda unidade (sem relação)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B5",
+          "tokensContexto": 1538,
+          "memoriasInjetadas": 1,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": [
+            {
+              "desc": "dados da Construtora Alvorada",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "C1",
+          "tokensContexto": 923,
+          "memoriasInjetadas": 2,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "pedido de treinamento após o phishing de abril",
+              "presente": true
+            }
+          ],
+          "ruidos": []
+        },
+        {
+          "turno": "C2",
+          "tokensContexto": 1231,
+          "memoriasInjetadas": 2,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C3",
+          "tokensContexto": 1545,
+          "memoriasInjetadas": 2,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C4",
+          "tokensContexto": 1903,
+          "memoriasInjetadas": 3,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C5",
+          "tokensContexto": 1665,
+          "memoriasInjetadas": 3,
+          "compressao": {
+            "trigger": "tokens",
+            "summarizedMessages": 4,
+            "tokensBefore": 1259,
+            "tokensAfter": 703
+          },
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C6",
+          "tokensContexto": 1930,
+          "memoriasInjetadas": 2,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "preferência: telefone à tarde",
+              "presente": true
+            }
+          ],
+          "ruidos": []
+        },
+        {
+          "turno": "C7",
+          "tokensContexto": 1789,
+          "memoriasInjetadas": 4,
+          "compressao": {
+            "trigger": "tokens",
+            "summarizedMessages": 4,
+            "tokensBefore": 1324,
+            "tokensAfter": 769
+          },
+          "necessarios": [
+            {
+              "desc": "40 pessoas (dito no início)",
+              "presente": true
+            },
+            {
+              "desc": "turno da noite, após 19h (dito no início)",
+              "presente": true
+            },
+            {
+              "desc": "galpão de Canoas (dito no início)",
+              "presente": true
+            }
+          ],
+          "ruidos": []
+        }
+      ]
+    },
+    {
+      "modo": "sem_filtro",
+      "turnos": [
+        {
+          "turno": "A1",
+          "tokensContexto": 1215,
+          "memoriasInjetadas": 8,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "preferência: prazo de entrega em destaque",
+              "presente": true
+            },
+            {
+              "desc": "preferência: retorno por e-mail",
+              "presente": true
+            },
+            {
+              "desc": "última compra: Dell Latitude 5450",
+              "presente": true
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": true
+            },
+            {
+              "desc": "chamado de VPN (sem relação)",
+              "presente": true
+            }
+          ]
+        },
+        {
+          "turno": "A2",
+          "tokensContexto": 1556,
+          "memoriasInjetadas": 9,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "modelo da última compra: Dell Latitude 5450",
+              "presente": true
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": true
+            }
+          ]
+        },
+        {
+          "turno": "A3",
+          "tokensContexto": 1328,
+          "memoriasInjetadas": 9,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "pedido combinado na sessão anterior: 15 notebooks",
+              "presente": true
+            },
+            {
+              "desc": "obra de Campinas",
+              "presente": true
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": true
+            }
+          ]
+        },
+        {
+          "turno": "A4",
+          "tokensContexto": 1632,
+          "memoriasInjetadas": 9,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "incidente anterior: chamado CH-4471",
+              "presente": true
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "memória irrelevante (evento de 2025)",
+              "presente": true
+            },
+            {
+              "desc": "licenças (sem relação)",
+              "presente": true
+            }
+          ]
+        },
+        {
+          "turno": "A5",
+          "tokensContexto": 1937,
+          "memoriasInjetadas": 9,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": [
+            {
+              "desc": "dados de outro cliente (Rota Sul)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B1",
+          "tokensContexto": 1091,
+          "memoriasInjetadas": 6,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "B2",
+          "tokensContexto": 1409,
+          "memoriasInjetadas": 6,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": [
+            {
+              "desc": "cobrança duplicada (sem relação)",
+              "presente": true
+            },
+            {
+              "desc": "segunda unidade (sem relação)",
+              "presente": true
+            },
+            {
+              "desc": "desktops (sem relação)",
+              "presente": true
+            }
+          ]
+        },
+        {
+          "turno": "B3",
+          "tokensContexto": 1169,
+          "memoriasInjetadas": 6,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "preferência atualizada: e-mail",
+              "presente": true
+            },
+            {
+              "desc": "renovação em fevereiro",
+              "presente": true
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "preferência desatualizada (WhatsApp)",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "B4",
+          "tokensContexto": 1462,
+          "memoriasInjetadas": 6,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "cobrança duplicada e estorno",
+              "presente": true
+            }
+          ],
+          "ruidos": [
+            {
+              "desc": "segunda unidade (sem relação)",
+              "presente": true
+            }
+          ]
+        },
+        {
+          "turno": "B5",
+          "tokensContexto": 1771,
+          "memoriasInjetadas": 6,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": [
+            {
+              "desc": "dados da Construtora Alvorada",
+              "presente": false
+            }
+          ]
+        },
+        {
+          "turno": "C1",
+          "tokensContexto": 953,
+          "memoriasInjetadas": 3,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "pedido de treinamento após o phishing de abril",
+              "presente": true
+            }
+          ],
+          "ruidos": []
+        },
+        {
+          "turno": "C2",
+          "tokensContexto": 1308,
+          "memoriasInjetadas": 4,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C3",
+          "tokensContexto": 1622,
+          "memoriasInjetadas": 4,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C4",
+          "tokensContexto": 1934,
+          "memoriasInjetadas": 4,
+          "compressao": null,
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C5",
+          "tokensContexto": 1742,
+          "memoriasInjetadas": 5,
+          "compressao": {
+            "trigger": "tokens",
+            "summarizedMessages": 4,
+            "tokensBefore": 1259,
+            "tokensAfter": 703
+          },
+          "necessarios": [],
+          "ruidos": []
+        },
+        {
+          "turno": "C6",
+          "tokensContexto": 2061,
+          "memoriasInjetadas": 5,
+          "compressao": null,
+          "necessarios": [
+            {
+              "desc": "preferência: telefone à tarde",
+              "presente": true
+            }
+          ],
+          "ruidos": []
+        },
+        {
+          "turno": "C7",
+          "tokensContexto": 1820,
+          "memoriasInjetadas": 5,
+          "compressao": {
+            "trigger": "tokens",
+            "summarizedMessages": 4,
+            "tokensBefore": 1324,
+            "tokensAfter": 769
+          },
+          "necessarios": [
+            {
+              "desc": "40 pessoas (dito no início)",
+              "presente": true
+            },
+            {
+              "desc": "turno da noite, após 19h (dito no início)",
+              "presente": true
+            },
+            {
+              "desc": "galpão de Canoas (dito no início)",
+              "presente": true
+            }
+          ],
+          "ruidos": []
+        }
+      ]
+    }
+  ]
+}
