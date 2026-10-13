@@ -36,6 +36,8 @@ export type AssistantDeps = {
   newId?: () => string;
   /** Texto escrito antes da resposta em streaming (ex.: "Assistente: " no CLI). */
   answerPrefix?: string;
+  /** Sobrescreve o orçamento da memória curta (SETTINGS.shortTerm.maxTokens), usado no experimento de compressão. */
+  shortTermMaxTokens?: number;
 };
 
 export type CompressionInfo = Pick<CompressionResult, "trigger" | "summarizedMessages" | "tokensBefore" | "tokensAfter">;
@@ -310,7 +312,7 @@ export class CrmAssistant {
       const compression = await maybeCompress({
         window: this.window,
         previousSummary: this.compressedSummary,
-        maxTokens: SETTINGS.shortTerm.maxTokens,
+        maxTokens: this.deps.shortTermMaxTokens ?? SETTINGS.shortTerm.maxTokens,
         maxMessages: SETTINGS.shortTerm.maxTurns * 2,
         summarize: (messages) =>
           withRetry(() => summarizeHistory(this.deps.llm, messages), retryPolicy(this.deps.out, "Falha na compressão", this.deps.sleep)),

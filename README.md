@@ -204,6 +204,8 @@ seguinte, a compressão é tentada de novo.
 Por isso a compressão pode ser agressiva: os fatos importantes já foram extraídos para a memória de longo prazo a cada
 mensagem. O resumo de compressão serve para manter a continuidade dentro do atendimento.
 
+**Resultado com o modelo real:** com o orçamento reduzido para 500 tokens, a compressão resumiu as primeiras mensagens da conversa longa, e os detalhes ditos nelas foram lembrados no fim em 6 de 6 execuções ([detalhes](#resultados-experimento-com-o-modelo-real-respostas-e-juiz)).
+
 ### Parâmetros e verificação
 
 | Parâmetro ([`settings.ts`](src/config/settings.ts)) | Valor | Efeito |
@@ -479,15 +481,65 @@ Com as correções, o resultado foi para 12 de 15 fatos, sem nenhum ruído novo.
 
 ### Resultados: experimento com o modelo real (respostas e juiz)
 
-**Pendente:** depende de uma chave da OpenAI. `npm run experiment` gera [`results/relatorio.md`](results/relatorio.md)
-com a qualidade das respostas em cada modo, avaliadas pelas checagens e pelo juiz, em 3 execuções.
+Executado em 13/10/2026 com `gpt-4o-mini` (respostas e juiz) e `text-embedding-3-small`: 4 modos × 17 mensagens ×
+3 execuções = 204 respostas, todas geradas e avaliadas, sem nenhuma falha de API. Relatório completo, com as
+transcrições, em [`results/relatorio.md`](results/relatorio.md); dados em [`results/experimento.json`](results/experimento.json).
+
+| Modo | Aprovação | Aprovados por execução | Nota média (1-5) | Checagens ok | Memória usada corretamente | Memória ausente | Uso irrelevante | Tokens de contexto (média) | Tokens de memória longa (média) |
+|---|---|---|---|---|---|---|---|---|---|
+| Sem memória | **19/51 (37%)** | 5 · 7 · 7 | 3,14 | 27/51 | 3 | 24 | 0 | 458 | 0 |
+| Só memória curta | **28/51 (55%)** | 9 · 10 · 9 | 3,53 | 31/51 | 8 | 19 | 0 | 722 | 0 |
+| **Memória completa (proposta)** | **39/51 (76%)** | 13 · 14 · 12 | **4,41** | 46/51 | 18 | 6 | 0 | 1.281 | ~167 |
+| Sem filtro | **40/51 (78%)** | 13 · 14 · 13 | 4,47 | 47/51 | 20 | 3 | 0 | 1.391 | ~286 |
+
+Turnos que dependem de histórico (aprovações nas 3 execuções):
+
+| Turno | O que exige | Sem memória | Só curta | Completa | Sem filtro |
+|---|---|---|---|---|---|
+| A2 | Saber o modelo da "última compra" | 0/3 | 0/3 | **3/3** | 3/3 |
+| A5 | Não inventar um assunto de outro cliente | 0/3 | 0/3 | **3/3** | 3/3 |
+| B3 | Usar a preferência **atualizada** (e-mail) e a data de renovação | 0/3 | 0/3 | **3/3** | 3/3 |
+| B4 | Lembrar a cobrança duplicada e o estorno | 0/3 | 0/3 | **3/3** | 3/3 |
+| C7 | Lembrar os detalhes do início de uma conversa longa | 0/3 | 3/3 | 3/3 | 3/3 |
+| A1, A3, A4 | Ver "Limitações" abaixo | 0/3 | 0/3 | 0/3 | 0/3 |
+
+**Análise**
+
+- **A memória dobra a taxa de acerto.** A aprovação vai de 37% (sem memória) para 76% (memória completa), e a nota média de 3,14 para 4,41. Sem memória, o juiz marcou "memória ausente" em 24 das 51 respostas: o assistente pedia ao cliente informações que a empresa já tinha.
+- **Cada camada resolve um tipo de problema.** A memória curta resolve a continuidade dentro do atendimento (C7 passa de 0/3 para 3/3). Só a memória de longo prazo resolve o que veio de outro atendimento ou do CRM (A2, B3 e B4 passam de 0/3 para 3/3).
+- **Consistência ao longo do tempo.** Em B3, a preferência por WhatsApp já havia sido substituída por e-mail em outro atendimento (B1). Nas 3 execuções, a memória completa usou o e-mail; a preferência antiga nunca voltou.
+- **Sem uso indevido.** Nenhum modo vazou dados de outro cliente (B5 3/3 em todos), e o juiz não encontrou uso irrelevante de memória em nenhuma das 204 respostas. Em A5, com memória, o assistente disse corretamente que não encontrou registro do treinamento (que era de outro cliente); sem memória, ele tratou o treinamento como algo já combinado e prometeu encaminhá-lo.
+- **Com filtro x sem filtro.** A qualidade ficou praticamente igual (76% x 78%), mas o modo sem filtro gastou **71% mais tokens de memória** (~286 x ~167 por mensagem) e injetou 6,3 memórias por mensagem, contra 3,6. Com só 17 memórias no CRM de exemplo, o `gpt-4o-mini` ignorou bem o excesso; na avaliação de contexto, porém, o modo sem filtro levou ruído a 6 mensagens. O ganho do filtro aparece em custo e escala: num CRM real, com centenas de memórias por cliente, injetar tudo não cabe no contexto.
+
+**Autocrítica ligada** (`npm run experiment -- --modos=completa --autocritica`, resultados em [`results/autocritica/`](results/autocritica/relatorio.md)):
+- A aprovação geral ficou igual (38/51, 75%). O revisor reprovou e reescreveu 15 dos 51 rascunhos.
+- Onde o problema era não usar uma memória disponível, a nota subiu: A1 de 2,3 para 3,3 e A4 de 2,7 para 3,7. Em A4, o revisor apontou "não menciona o chamado anterior relacionado à lentidão da VPN", e a versão revisada passou a reconhecer a recorrência.
+- Mesmo assim, as revisões foram tímidas: citaram "um problema semelhante", sem o número do chamado, e não passaram nas checagens.
+
+**Compressão com o modelo real** (`npm run experiment -- --modos=curta,completa --cenarios=C --orcamento-curto=500`, resultados em [`results/compressao/`](results/compressao/relatorio.md)):
+- No experimento principal, a compressão não chegou a ser acionada: as respostas reais foram mais curtas que as da simulação, e a conversa longa não passou de 1.200 tokens. Por isso, esta rodada repetiu o cenário C com o orçamento reduzido para 500 tokens.
+- A compressão foi acionada no C5, C6 e C7 em todas as 6 execuções. O C5 resumiu justamente as mensagens C1 e C2, onde estavam os detalhes, e em média cada compressão reduziu a memória curta para 75% do tamanho anterior.
+- **Mesmo assim, o C7 foi aprovado em 6 de 6.** No modo só curta, que não tem memória de longo prazo, os detalhes só podiam vir do resumo. Resposta real do C7, nesse modo: "Número de participantes: 40 motoristas · Horário preferencial: turno da noite · Local: galpão de Canoas".
+
+**Limitações**
+
+- **A1 e A4: a recuperação acertou, a geração não.** As memórias necessárias estavam no contexto: no A1 entraram o Latitude 5450 (M3) e a preferência de destacar o prazo (M5); no A4, o chamado CH-4471 (M6, score 0,59). Mesmo assim, o modelo respondeu de forma genérica. O gargalo aqui é o prompt de geração, não a memória.
+- **A3: ruído do juiz.** A resposta retomou os 15 notebooks Dell Latitude 5450 com o prazo em destaque, mas o juiz marcou "uso incorreto" com uma justificativa que contradiz o gabarito. Em 2 das 3 execuções a resposta também não citou "Campinas", então a reprovação é parcialmente justa.
+- **Juiz e respondente são o mesmo modelo** (`gpt-4o-mini`), e a amostra é pequena (17 mensagens × 3 execuções). Os números indicam tendência, não precisão estatística.
+- **A compressão dispara em mensagens seguidas** quando o orçamento fica perto do tamanho normal da conversa (C5, C6 e C7 com orçamento de 500). Cada disparo custa uma chamada de resumo.
+
+**Próximos passos**
+
+- Instruir o prompt de geração a citar explicitamente o histórico relacionado (número do chamado, pedido anterior) quando ele estiver no contexto. É o que falta em A1 e A4.
+- Adicionar histerese à compressão: comprimir até, por exemplo, 60% do orçamento, para não resumir em toda mensagem.
+- Usar um juiz de modelo mais forte (`OPENAI_JUDGE_MODEL`) e aumentar o número de cenários.
 
 ## Critérios de aceitação e evidências
 
 | Critério / evidência | Como o projeto atende | Onde verificar |
 |---|---|---|
 | Memória é realmente utilizada nas respostas | Memórias relevantes entram no contexto a cada mensagem; o juiz classifica o uso como correto, ausente ou incorreto | `--debug`; relatório (coluna "Memória usada corretamente"; memórias injetadas por turno) |
-| Respostas melhoram com histórico | Mesmo cenário em 4 modos: fatos necessários que chegam ao modelo (simulação) e aprovação e nota por modo (experimento real) | [Resultados da avaliação de contexto](#resultados-avaliação-de-contexto-simulação-sem-chave-de-api): 0% sem memória x 80% com memória completa; relatório do experimento real |
+| Respostas melhoram com histórico | Mesmo cenário em 4 modos, com o modelo real: aprovação e nota por modo | [Experimento real](#resultados-experimento-com-o-modelo-real-respostas-e-juiz): aprovação de 37% sem memória x 76% com memória completa (nota 3,14 x 4,41); avaliação de contexto: 0% x 80% dos fatos necessários |
 | Não há uso incorreto ou irrelevante | Recuperação filtrada e com orçamento, regras no prompt, autocrítica, isolamento por cliente, guardrails | Avaliação de contexto: zero ruído no modo completa x 6 mensagens com ruído sem filtro; turnos A5, B2 e B5; testes `retrieveMemories` e `crmAssistant` |
 | Sistema mantém consistência ao longo do tempo | `ATUALIZAR` com `supersedes`; histórico só com interações íntegras | Turnos B1 → B3 (a preferência antiga não volta ao contexto); "Evolução da memória" no relatório; testes `longTermMemory` |
 | Entendimento de statefulness | 3 níveis de memória (sessão, fatos, episódios); retomada de sessão a partir do SQLite; modo stateless como linha de base | Seção [Arquitetura da memória](#arquitetura-da-memória); `npm start` → retomar atendimento |

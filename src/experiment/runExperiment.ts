@@ -59,6 +59,9 @@ export type ExperimentResults = {
   modeloEmbedding: string;
   autocritica: boolean;
   repeticoes: number;
+  /** Cenários executados e orçamento da memória curta usado (podem diferir do padrão via opções da linha de comando). */
+  cenarios?: string[];
+  orcamentoMemoriaCurta?: number;
   /** Quantas chamadas foram repetidas por 429 credit_balance_exhausted intermitente (ver retryOnCredit). */
   retentativasDeCredito?: number;
   configuracao: typeof SETTINGS;
@@ -133,7 +136,17 @@ function cached(embedder: Embedder): Embedder {
   };
 }
 
-export type RunDeps = { llm: LlmClient; judgeLlm: LlmClient; embedder: Embedder; critique: boolean; log?: (text: string) => void };
+export type RunDeps = {
+  llm: LlmClient;
+  judgeLlm: LlmClient;
+  embedder: Embedder;
+  critique: boolean;
+  /** Ids dos cenários a executar (padrão: todos). */
+  scenarios?: string[];
+  /** Orçamento da memória curta em tokens (padrão: SETTINGS.shortTerm.maxTokens). */
+  shortTermMaxTokens?: number;
+  log?: (text: string) => void;
+};
 
 /** Executa todos os cenários uma vez, num banco novo (mesma carga inicial do CRM). */
 export async function runOnce(mode: MemoryMode, repeticao: number, deps: RunDeps): Promise<ModeExecution> {
@@ -149,11 +162,12 @@ export async function runOnce(mode: MemoryMode, repeticao: number, deps: RunDeps
     out: silent,
     mode,
     critique: deps.critique,
+    ...(deps.shortTermMaxTokens ? { shortTermMaxTokens: deps.shortTermMaxTokens } : {}),
     now: () => clock,
   });
 
   const turnos: TurnRecord[] = [];
-  for (const scenario of SCENARIOS) {
+  for (const scenario of SCENARIOS.filter((s) => !deps.scenarios || deps.scenarios.includes(s.id))) {
     for (const session of scenario.sessoes) {
       clock = new Date(session.data);
       assistant.startSession(scenario.clienteId);
@@ -244,6 +258,8 @@ async function main(): Promise<void> {
   const modes = (arg("modos")?.split(",") ?? [...MEMORY_MODES]) as MemoryMode[];
   const critique = process.argv.includes("--autocritica");
   const repeticoes = Math.max(1, Number.parseInt(arg("repeticoes") ?? "3", 10) || 3);
+  const scenarios = arg("cenarios")?.split(",");
+  const shortTermMaxTokens = arg("orcamento-curto") ? Number.parseInt(arg("orcamento-curto")!, 10) : undefined;
   const outDir = arg("saida") ?? "results";
 
   const deps = {
@@ -251,6 +267,8 @@ async function main(): Promise<void> {
     judgeLlm: resilientLlm(createOpenAiClient(apiKey, judgeModel)),
     embedder: cached(resilientEmbedder(createOpenAiEmbedder(apiKey))),
     critique,
+    ...(scenarios ? { scenarios } : {}),
+    ...(shortTermMaxTokens ? { shortTermMaxTokens } : {}),
   };
 
   console.log(
@@ -269,6 +287,8 @@ async function main(): Promise<void> {
     modeloEmbedding: SETTINGS.embeddingModel,
     autocritica: critique,
     repeticoes,
+    cenarios: scenarios ?? SCENARIOS.map((s) => s.id),
+    orcamentoMemoriaCurta: shortTermMaxTokens ?? SETTINGS.shortTerm.maxTokens,
     retentativasDeCredito: creditRetries.count,
     configuracao: SETTINGS,
     modos: runs,

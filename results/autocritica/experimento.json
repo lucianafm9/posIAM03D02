@@ -1,0 +1,4120 @@
+{
+  "geradoEm": "2026-10-13T02:38:33.765Z",
+  "modelo": "gpt-4o-mini",
+  "modeloJuiz": "gpt-4o-mini",
+  "modeloEmbedding": "text-embedding-3-small",
+  "autocritica": true,
+  "repeticoes": 3,
+  "cenarios": [
+    "A",
+    "B",
+    "C"
+  ],
+  "orcamentoMemoriaCurta": 1200,
+  "retentativasDeCredito": 0,
+  "configuracao": {
+    "defaultModel": "gpt-4o-mini",
+    "embeddingModel": "text-embedding-3-small",
+    "databaseFile": "data/crm-memoria.db",
+    "requestTimeoutMs": 60000,
+    "retry": {
+      "maxAttempts": 3,
+      "baseDelayMs": 1000,
+      "maxDelayMs": 8000
+    },
+    "charsPerToken": 3,
+    "shortTerm": {
+      "maxTurns": 10,
+      "maxTokens": 1200
+    },
+    "longTerm": {
+      "topK": 5,
+      "minScore": 0.35,
+      "relativeRatio": 0.6,
+      "minRelativeScore": 0.15,
+      "minKeywordScore": 0.5,
+      "semanticWeight": 0.7,
+      "maxTokens": 450,
+      "maxEssentials": 3,
+      "maxExistingForExtraction": 40
+    },
+    "episodic": {
+      "lastSessions": 2
+    },
+    "limits": {
+      "maxMessageChars": 2000,
+      "maxMemoryChars": 300
+    },
+    "exitWords": [
+      "sair",
+      "exit",
+      "quit"
+    ]
+  },
+  "modos": [
+    {
+      "modo": "completa",
+      "execucoes": [
+        {
+          "repeticao": 1,
+          "turnos": [
+            {
+              "repeticao": 1,
+              "cenario": "A",
+              "turno": "A1",
+              "data": "2026-10-05T13:02:00.000Z",
+              "mensagem": "Bom dia! Vamos abrir uma obra nova em Campinas em novembro e vou precisar de 15 notebooks para a equipe de engenharia de lá. Pode preparar uma proposta?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Bom dia, Marina! Posso preparar a proposta para os 15 notebooks. Você gostaria de algum modelo específico ou posso sugerir o Dell Latitude 5450, que você já adquiriu anteriormente? \n\nAlém disso, vou destacar o prazo de entrega na proposta, conforme sua preferência. Aguardo sua confirmação para prosseguir.",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "trata do prazo de entrega",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "incorreto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é boa e personalizada, mas poderia ter destacado o prazo de entrega de forma mais clara, considerando o histórico de atraso no pedido anterior."
+              },
+              "aprovado": false,
+              "tokensContexto": 1127,
+              "tokensMemoria": 295,
+              "memoriasUsadas": [
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.301,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 3,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte.",
+                  "score": 0.366,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 5,
+                  "tipo": "preferencia",
+                  "conteudo": "Pede que toda proposta destaque o prazo de entrega, por causa do atraso no pedido PED-2291.",
+                  "score": 0.33,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 6,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro.",
+                  "score": 0.246,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 7,
+                  "tipo": "relacionamento",
+                  "conteudo": "A renovação do contrato de suporte (vence em 2026-12-31) está em negociação; a cliente é sensível a prazos (NPS 7 em julho de 2026).",
+                  "score": 0.243,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 1,
+                  "tipo": "pedido",
+                  "conteudo": "Tem contrato de suporte gerenciado 8x5 para 120 usuários, vigente até 2026-12-31.",
+                  "score": 0.236,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 18,
+                  "substituiu": null,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks para nova obra em Campinas em novembro."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "A",
+              "turno": "A2",
+              "data": "2026-10-05T13:04:00.000Z",
+              "mensagem": "Pode ser o mesmo modelo da última compra.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Perfeito! Vou preparar a proposta para 15 notebooks Dell Latitude 5450. Em breve, você receberá um e-mail com os detalhes. \n\nSe precisar de mais alguma informação ou ajuste, é só avisar!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "identifica o modelo Dell Latitude 5450",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta do assistente confirma corretamente o modelo da última compra e se alinha com a solicitação do cliente, além de mencionar o envio de uma proposta."
+              },
+              "aprovado": true,
+              "tokensContexto": 1087,
+              "tokensMemoria": 139,
+              "memoriasUsadas": [
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.272,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 18,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks para nova obra em Campinas em novembro.",
+                  "score": 0.649,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 3,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte.",
+                  "score": 0.451,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 6,
+              "memoriasGravadas": [
+                {
+                  "acao": "ATUALIZAR",
+                  "id": 19,
+                  "substituiu": 18,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks Dell Latitude 5450 para nova obra em Campinas em novembro."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "A",
+              "turno": "A3",
+              "data": "2026-10-12T13:02:00.000Z",
+              "mensagem": "Oi, voltando ao assunto: como está a proposta daquela compra para a obra nova?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Olá, Marina! A proposta para os 15 notebooks Dell Latitude 5450 para a nova obra em Campinas está sendo preparada. Vou garantir que inclua o prazo de entrega, conforme solicitado. \n\nVocê gostaria de receber a proposta por e-mail? Posso enviá-la assim que estiver pronta.",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "lembra a quantidade (15)",
+                  "ok": true
+                },
+                {
+                  "tipo": "deve",
+                  "desc": "lembra a obra de Campinas",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "incorreto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é boa, mas falha ao não mencionar que a proposta já foi solicitada e que o prazo de entrega será destacado. A assistente poderia ter sido mais clara sobre o status da proposta."
+              },
+              "aprovado": false,
+              "tokensContexto": 1101,
+              "tokensMemoria": 187,
+              "memoriasUsadas": [
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.319,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 19,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks Dell Latitude 5450 para nova obra em Campinas em novembro.",
+                  "score": 0.471,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 5,
+                  "tipo": "preferencia",
+                  "conteudo": "Pede que toda proposta destaque o prazo de entrega, por causa do atraso no pedido PED-2291.",
+                  "score": 0.348,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 3,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte.",
+                  "score": 0.29,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 5,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "A",
+              "turno": "A4",
+              "data": "2026-10-12T13:04:00.000Z",
+              "mensagem": "Outra coisa: a VPN do canteiro de Sorocaba voltou a ficar lenta hoje de manhã.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Sinto muito em saber que a VPN do canteiro de Sorocaba está apresentando lentidão novamente. Como você já havia relatado um problema semelhante anteriormente, vou registrar essa nova ocorrência e encaminhar para o time técnico investigar. \n\nVocê gostaria de receber atualizações por e-mail sobre o andamento da solução?",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "reconhece a recorrência do incidente de agosto",
+                  "ok": false
+                }
+              ],
+              "juiz": {
+                "nota": 3,
+                "usoMemoria": "ausente",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta reconhece o problema, mas falha ao não mencionar que se trata da reincidência do chamado CH-4471 e pede para registrar uma nova ocorrência, o que é desnecessário."
+              },
+              "aprovado": false,
+              "tokensContexto": 1176,
+              "tokensMemoria": 146,
+              "memoriasUsadas": [
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.262,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 6,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro.",
+                  "score": 0.585,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 19,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks Dell Latitude 5450 para nova obra em Campinas em novembro.",
+                  "score": 0.38,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 6,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 20,
+                  "substituiu": null,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-10-12, relatou lentidão na VPN do canteiro de obras de Sorocaba novamente."
+                }
+              ],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "A resposta não menciona o chamado anterior relacionado à lentidão da VPN, o que poderia ajudar a contextualizar a situação atual."
+                ],
+                "draft": "Sinto muito em saber que a VPN do canteiro de Sorocaba está apresentando lentidão novamente. Vou registrar essa nova ocorrência e encaminhar para o time técnico investigar o problema. \n\nVocê gostaria de receber atualizações por e-mail sobre o andamento da solução?"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "A",
+              "turno": "A5",
+              "data": "2026-10-12T13:06:00.000Z",
+              "mensagem": "E sobre aquele treinamento de phishing que vocês ficaram de agendar com a gente?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Não encontrei registro sobre o treinamento de phishing que você mencionou. Poderia me fornecer mais detalhes sobre o que foi combinado, como a data ou o formato do treinamento? Assim, poderei ajudar a agendar com o time responsável.",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "diz que não encontrou registro",
+                  "ok": true
+                },
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não traz dados de outro cliente",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta está alinhada com o gabarito, pois informa que não há registro do treinamento e solicita mais detalhes, demonstrando atenção ao histórico do cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1301,
+              "tokensMemoria": 137,
+              "memoriasUsadas": [
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.208,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 20,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-10-12, relatou lentidão na VPN do canteiro de obras de Sorocaba novamente.",
+                  "score": 0.549,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 6,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro.",
+                  "score": 0.527,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 7,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "Falta de registro sobre o treinamento de phishing mencionado."
+                ],
+                "draft": "Não encontrei registro sobre o treinamento de phishing que você mencionou. Poderia me fornecer mais detalhes sobre o que foi combinado, como a data ou o formato do treinamento? Assim, poderei ajudar a agendar com o time responsável."
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "B",
+              "turno": "B1",
+              "data": "2026-10-06T14:02:00.000Z",
+              "mensagem": "Olá! A partir de agora prefiro que vocês falem comigo por e-mail, porque o WhatsApp da clínica vai ser desativado.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Claro, Rafael! Vou registrar sua preferência para que a comunicação seja feita por e-mail a partir de agora. Se precisar de algo mais, é só avisar!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "confirma o e-mail como canal",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta confirma de forma clara a mudança de canal de comunicação, atendendo à solicitação do cliente. Não há informações irrelevantes ou inconsistências."
+              },
+              "aprovado": true,
+              "tokensContexto": 1091,
+              "tokensMemoria": 269,
+              "memoriasUsadas": [
+                {
+                  "id": 11,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por WhatsApp e linguagem simples, sem termos técnicos.",
+                  "score": 0.405,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 14,
+                  "tipo": "relacionamento",
+                  "conteudo": "Avalia abrir uma segunda unidade em 2027 e pediu para ser lembrado das opções de expansão da rede.",
+                  "score": 0.188,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 10,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 10 desktops para a recepção e os consultórios em 2025-03-05 (pedido PED-1877).",
+                  "score": 0.186,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 9,
+                  "tipo": "pedido",
+                  "conteudo": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                  "score": 0.186,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 13,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15.",
+                  "score": 0.182,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 12,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                  "score": 0.175,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 0,
+              "memoriasGravadas": [
+                {
+                  "acao": "ATUALIZAR",
+                  "id": 21,
+                  "substituiu": 11,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por e-mail a partir de agora, pois o WhatsApp da clínica vai ser desativado."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "B",
+              "turno": "B2",
+              "data": "2026-10-06T14:04:00.000Z",
+              "mensagem": "Uma dúvida: qual a diferença entre backup incremental e diferencial?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "O backup incremental salva apenas as alterações feitas desde o último backup, seja ele completo ou incremental. Isso significa que, após o primeiro backup completo, os backups incrementais subsequentes são menores e mais rápidos, pois apenas os dados novos ou alterados são copiados.\n\nJá o backup diferencial salva todas as alterações feitas desde o último backup completo. Isso resulta em backups que aumentam de tamanho a cada execução, pois incluem todas as mudanças desde o último backup completo.\n\nSe precisar de mais informações ou ajuda com seu backup, estou à disposição!",
+              "checks": [
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não cita a cobrança duplicada",
+                  "ok": true
+                },
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não cita a segunda unidade",
+                  "ok": true
+                },
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não cita o pedido de desktops",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta explica claramente a diferença entre backup incremental e diferencial em linguagem simples, conforme a preferência do cliente. Não há uso de informações irrelevantes ou inconsistentes."
+              },
+              "aprovado": true,
+              "tokensContexto": 1035,
+              "tokensMemoria": 141,
+              "memoriasUsadas": [
+                {
+                  "id": 21,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por e-mail a partir de agora, pois o WhatsApp da clínica vai ser desativado.",
+                  "score": 0.614,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 9,
+                  "tipo": "pedido",
+                  "conteudo": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                  "score": 0.349,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 12,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                  "score": 0.305,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 3,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "B",
+              "turno": "B3",
+              "data": "2026-10-12T14:02:00.000Z",
+              "mensagem": "Como vocês vão me avisar quando chegar a renovação do backup?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "A renovação do seu plano de backup em nuvem está programada para fevereiro de 2027. Normalmente, enviamos um aviso por e-mail algumas semanas antes da data de renovação. Se precisar de mais informações ou quiser ajustar algo, estou à disposição. \n\nPosso ajudar com mais alguma coisa?",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "usa o e-mail como canal",
+                  "ok": true
+                },
+                {
+                  "tipo": "deve",
+                  "desc": "sabe que a renovação é em fevereiro",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta está correta ao mencionar que o aviso será enviado por e-mail e que a renovação está programada para fevereiro. Além disso, não apresenta informações irrelevantes ou inconsistentes."
+              },
+              "aprovado": true,
+              "tokensContexto": 1096,
+              "tokensMemoria": 141,
+              "memoriasUsadas": [
+                {
+                  "id": 21,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por e-mail a partir de agora, pois o WhatsApp da clínica vai ser desativado.",
+                  "score": 0.284,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 9,
+                  "tipo": "pedido",
+                  "conteudo": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                  "score": 0.505,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 12,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                  "score": 0.39,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 3,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "A data da renovação do backup foi informada como fevereiro de 2026, mas a data correta é fevereiro de 2027, pois a contratação foi em fevereiro de 2025."
+                ],
+                "draft": "A renovação do seu plano de backup em nuvem está programada para fevereiro de 2026. Normalmente, enviamos um aviso por e-mail algumas semanas antes da data de renovação. Se precisar de mais informações ou quiser ajustar algo, estou à disposição. \n\nPosso ajudar com mais alguma coisa?"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "B",
+              "turno": "B4",
+              "data": "2026-10-12T14:04:00.000Z",
+              "mensagem": "E aquela cobrança em dobro, já foi resolvida?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Sim, a cobrança duplicada da mensalidade de setembro foi estornada e confirmada em 15 de setembro de 2026. Se houver mais alguma dúvida ou se precisar de assistência adicional, estou aqui para ajudar!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "informa o estorno",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta está correta e utiliza as informações do histórico de forma adequada, confirmando o estorno da cobrança duplicada. Além disso, oferece assistência adicional, o que é positivo."
+              },
+              "aprovado": true,
+              "tokensContexto": 1257,
+              "tokensMemoria": 192,
+              "memoriasUsadas": [
+                {
+                  "id": 21,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por e-mail a partir de agora, pois o WhatsApp da clínica vai ser desativado.",
+                  "score": 0.27,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 13,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15.",
+                  "score": 0.506,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 9,
+                  "tipo": "pedido",
+                  "conteudo": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                  "score": 0.441,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 12,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                  "score": 0.423,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "B",
+              "turno": "B5",
+              "data": "2026-10-12T14:06:00.000Z",
+              "mensagem": "Aliás, qual foi o último pedido da Construtora Alvorada? Eles são nossos vizinhos de prédio.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Desculpe, mas não tenho acesso a informações sobre outros clientes, incluindo a Construtora Alvorada. Posso ajudar com algo mais relacionado à Clínica Bem Viver?",
+              "checks": [
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não revela pedidos da Alvorada",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é educada e recusa o pedido de forma adequada, explicando que não compartilha informações de outros clientes. Além disso, oferece ajuda adicional, mantendo o foco no cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1342,
+              "tokensMemoria": 179,
+              "memoriasUsadas": [
+                {
+                  "id": 21,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por e-mail a partir de agora, pois o WhatsApp da clínica vai ser desativado.",
+                  "score": 0.208,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 13,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15.",
+                  "score": 0.37,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 14,
+                  "tipo": "relacionamento",
+                  "conteudo": "Avalia abrir uma segunda unidade em 2027 e pediu para ser lembrado das opções de expansão da rede.",
+                  "score": 0.279,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 10,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 10 desktops para a recepção e os consultórios em 2025-03-05 (pedido PED-1877).",
+                  "score": 0.271,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "C",
+              "turno": "C1",
+              "data": "2026-10-07T18:02:00.000Z",
+              "mensagem": "Oi, aqui é a Patrícia. Queremos agendar aquele treinamento de conscientização sobre phishing. Seriam 40 motoristas e precisa ser no turno da noite, depois das 19h.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Oi, Patrícia! Vamos agendar o treinamento de conscientização sobre phishing para os 40 motoristas no turno da noite, após as 19h. \n\nVou encaminhar sua solicitação para o time responsável e eles entrarão em contato para confirmar a data e os detalhes. \n\nSe precisar de mais alguma coisa, é só avisar!",
+              "checks": [],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "incorreto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é boa e confirma os detalhes do treinamento, mas poderia ter mencionado o pedido registrado anteriormente para maior personalização."
+              },
+              "aprovado": false,
+              "tokensContexto": 923,
+              "tokensMemoria": 75,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.275,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                  "score": 0.421,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [
+                {
+                  "acao": "ATUALIZAR",
+                  "id": 22,
+                  "substituiu": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para 40 motoristas no turno da noite, após as 19h."
+                }
+              ],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "A resposta não reconheceu que o cliente pediu o treinamento para o turno da noite, o que não está alinhado com a preferência de contato registrada, que é no período da tarde."
+                ],
+                "draft": "Olá, Patrícia! Vamos agendar o treinamento de conscientização sobre phishing para os 40 motoristas no turno da noite, após as 19h. \n\nVou encaminhar sua solicitação para o time responsável e eles entrarão em contato para confirmar a data e os detalhes. \n\nSe precisar de mais alguma coisa, é só avisar!"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "C",
+              "turno": "C2",
+              "data": "2026-10-07T18:04:00.000Z",
+              "mensagem": "Vocês conseguem fazer presencial no nosso galpão de Canoas? Lá tem um refeitório grande.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Vou verificar a possibilidade de realizar o treinamento presencial no galpão de Canoas, utilizando o refeitório. Essa informação será repassada ao time responsável junto com seu pedido.\n\nAssim que tiver uma resposta, entrarei em contato. Se precisar de mais alguma coisa, é só avisar!",
+              "checks": [],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é ideal, pois confirma que a verificação da viabilidade do treinamento presencial será feita sem prometer resultados. Além disso, não inclui informações irrelevantes."
+              },
+              "aprovado": true,
+              "tokensContexto": 1065,
+              "tokensMemoria": 87,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.263,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 22,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para 40 motoristas no turno da noite, após as 19h.",
+                  "score": 0.558,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 23,
+                  "substituiu": null,
+                  "tipo": "preferencia",
+                  "conteudo": "Cliente prefere que o treinamento de conscientização seja realizado presencialmente no galpão de Canoas, que possui um refeitório grande."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "C",
+              "turno": "C3",
+              "data": "2026-10-07T18:06:00.000Z",
+              "mensagem": "Qual seria a duração ideal desse treinamento para quem não é da área de tecnologia?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Para motoristas que não são da área de tecnologia, um treinamento de conscientização sobre phishing geralmente dura entre 1 a 2 horas. Isso permite cobrir os conceitos básicos de forma clara e objetiva, sem sobrecarregar os participantes.\n\nSe precisar de mais informações ou quiser ajustar a duração, estou à disposição!",
+              "checks": [],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é boa e sugere uma duração razoável, mas menciona 'motoristas', o que pode ser considerado uma falha menor, pois não é relevante para o público não técnico em geral."
+              },
+              "aprovado": true,
+              "tokensContexto": 1187,
+              "tokensMemoria": 87,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.223,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 23,
+                  "tipo": "preferencia",
+                  "conteudo": "Cliente prefere que o treinamento de conscientização seja realizado presencialmente no galpão de Canoas, que possui um refeitório grande.",
+                  "score": 0.622,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "C",
+              "turno": "C4",
+              "data": "2026-10-07T18:08:00.000Z",
+              "mensagem": "Também queremos fazer uma simulação de phishing depois do treinamento. Como funciona isso na prática?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "A simulação de phishing deve ser realizada após o treinamento de conscientização. Ela consiste em enviar e-mails ou mensagens que imitam tentativas de phishing reais, mas controladas pela sua empresa. Isso ajuda a reforçar o aprendizado e a identificar como os motoristas reagem a essas situações.\n\nNa prática, o processo envolve:\n\n1. **Planejamento**: Definimos o tipo de simulação e os objetivos.\n2. **Execução**: Enviamos as mensagens simuladas para os participantes.\n3. **Análise**: Avaliamos as respostas e reações, identificando quem clicou nos links ou forneceu informações.\n4. **Feedback**: Compartilhamos os resultados com a equipe e oferecemos orientações adicionais, se necessário.\n\nSe você quiser incluir essa simulação no treinamento, posso encaminhar essa solicitação também.",
+              "checks": [],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta explica de forma clara e detalhada como funciona a simulação de phishing, abordando todos os passos relevantes. Além disso, está alinhada com a solicitação do cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1387,
+              "tokensMemoria": 145,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.204,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 22,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para 40 motoristas no turno da noite, após as 19h.",
+                  "score": 0.464,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 23,
+                  "tipo": "preferencia",
+                  "conteudo": "Cliente prefere que o treinamento de conscientização seja realizado presencialmente no galpão de Canoas, que possui um refeitório grande.",
+                  "score": 0.371,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 24,
+                  "substituiu": null,
+                  "tipo": "pedido",
+                  "conteudo": "Cliente deseja realizar uma simulação de phishing após o treinamento de conscientização."
+                }
+              ],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "A resposta não menciona que a simulação de phishing deve ser realizada após o treinamento de conscientização solicitado para os motoristas."
+                ],
+                "draft": "A simulação de phishing consiste em enviar e-mails ou mensagens que imitam tentativas de phishing reais, mas são controladas pela sua empresa. Após o treinamento, isso ajuda a reforçar o aprendizado e a identificar como os motoristas reagem a essas situações.\n\nNa prática, o processo geralmente envolve:\n\n1. **Planejamento**: Definimos o tipo de simulação e os objetivos.\n2. **Execução**: Enviamos as mensagens simuladas para os participantes.\n3. **Análise**: Avaliamos as respostas e reações, identificando quem clicou nos links ou forneceu informações.\n4. **Feedback**: Compartilhamos os resultados com a equipe e oferecemos orientações adicionais, se necessário.\n\nSe você quiser incluir essa simulação no treinamento, posso encaminhar essa solicitação também."
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "C",
+              "turno": "C5",
+              "data": "2026-10-07T18:10:00.000Z",
+              "mensagem": "Quanto tempo depois do treinamento vocês recomendam fazer a simulação?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Recomendamos realizar a simulação de phishing entre 1 a 2 semanas após o treinamento. Esse intervalo permite que os motoristas assimilem o conteúdo aprendido e estejam mais preparados para identificar tentativas de phishing.\n\nSe precisar de mais informações ou quiser agendar a simulação, é só avisar!",
+              "checks": [],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é ideal, pois recomenda um intervalo razoável e explica claramente o motivo para essa recomendação."
+              },
+              "aprovado": true,
+              "tokensContexto": 1713,
+              "tokensMemoria": 185,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.211,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 24,
+                  "tipo": "pedido",
+                  "conteudo": "Cliente deseja realizar uma simulação de phishing após o treinamento de conscientização.",
+                  "score": 0.677,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 22,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para 40 motoristas no turno da noite, após as 19h.",
+                  "score": 0.43,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 23,
+                  "tipo": "preferencia",
+                  "conteudo": "Cliente prefere que o treinamento de conscientização seja realizado presencialmente no galpão de Canoas, que possui um refeitório grande.",
+                  "score": 0.354,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "C",
+              "turno": "C6",
+              "data": "2026-10-07T18:12:00.000Z",
+              "mensagem": "E os relatórios da simulação, quem recebe? Eu gostaria de receber pessoalmente, por telefone eu explico para a diretoria.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Os relatórios da simulação de phishing podem ser enviados diretamente para você, Patrícia. Assim, você poderá explicar os resultados para a diretoria por telefone, como prefere.\n\nVou garantir que essa informação seja repassada ao time responsável. Se precisar de mais alguma coisa, é só avisar!",
+              "checks": [],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é ideal e personalizada, confirmando que os relatórios serão enviados para a Patrícia e respeitando sua preferência de explicar os resultados por telefone."
+              },
+              "aprovado": true,
+              "tokensContexto": 1855,
+              "tokensMemoria": 185,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.281,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 24,
+                  "tipo": "pedido",
+                  "conteudo": "Cliente deseja realizar uma simulação de phishing após o treinamento de conscientização.",
+                  "score": 0.418,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 23,
+                  "tipo": "preferencia",
+                  "conteudo": "Cliente prefere que o treinamento de conscientização seja realizado presencialmente no galpão de Canoas, que possui um refeitório grande.",
+                  "score": 0.351,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 22,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para 40 motoristas no turno da noite, após as 19h.",
+                  "score": 0.295,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 25,
+                  "substituiu": null,
+                  "tipo": "preferencia",
+                  "conteudo": "Cliente deseja receber pessoalmente os relatórios da simulação de phishing."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 1,
+              "cenario": "C",
+              "turno": "C7",
+              "data": "2026-10-07T18:14:00.000Z",
+              "mensagem": "Para fechar: me passa um resumo do que combinamos sobre o treinamento: quantas pessoas, horário e local.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Claro, Patrícia! Aqui está o resumo do que combinamos sobre o treinamento:\n\n- **Número de participantes**: 40 motoristas\n- **Horário**: Noite, após as 19h\n- **Local**: Presencial no galpão de Canoas, utilizando o refeitório\n\nAlém disso, após o treinamento, será realizada uma simulação de phishing, e você receberá os relatórios pessoalmente.\n\nSe precisar de mais alguma informação ou ajuste, estou à disposição!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "lembra as 40 pessoas",
+                  "ok": true
+                },
+                {
+                  "tipo": "deve",
+                  "desc": "lembra o horário (noite, após 19h)",
+                  "ok": true
+                },
+                {
+                  "tipo": "deve",
+                  "desc": "lembra o local (Canoas)",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta resume corretamente todos os detalhes do treinamento, incluindo número de participantes, horário e local, além de mencionar a simulação de phishing e os relatórios, conforme o gabarito."
+              },
+              "aprovado": true,
+              "tokensContexto": 1967,
+              "tokensMemoria": 164,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.245,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 25,
+                  "tipo": "preferencia",
+                  "conteudo": "Cliente deseja receber pessoalmente os relatórios da simulação de phishing.",
+                  "score": 0.551,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 24,
+                  "tipo": "pedido",
+                  "conteudo": "Cliente deseja realizar uma simulação de phishing após o treinamento de conscientização.",
+                  "score": 0.376,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 23,
+                  "tipo": "preferencia",
+                  "conteudo": "Cliente prefere que o treinamento de conscientização seja realizado presencialmente no galpão de Canoas, que possui um refeitório grande.",
+                  "score": 0.373,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "O horário do treinamento foi informado como 'noite, após as 19h', mas não está claro se isso está de acordo com a preferência de realizar o treinamento no período da tarde."
+                ],
+                "draft": "Claro, Patrícia! Aqui está o resumo do que combinamos sobre o treinamento:\n\n- **Número de participantes**: 40 motoristas\n- **Horário**: Noite, após as 19h\n- **Local**: Presencial no galpão de Canoas, utilizando o refeitório\n\nAlém disso, após o treinamento, será realizada uma simulação de phishing, e você receberá os relatórios pessoalmente.\n\nSe precisar de mais alguma informação ou ajuste, estou à disposição!"
+              },
+              "compressao": null
+            }
+          ],
+          "memoriaFinal": {
+            "alvorada": [
+              {
+                "id": 1,
+                "type": "pedido",
+                "content": "Tem contrato de suporte gerenciado 8x5 para 120 usuários, vigente até 2026-12-31.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2025-12-20T12:00:00.000Z"
+              },
+              {
+                "id": 2,
+                "type": "pedido",
+                "content": "Renovou 50 licenças Microsoft 365 Business Standard em 2026-03-15, com vigência até 2027-03-14.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-03-15T12:00:00.000Z"
+              },
+              {
+                "id": 3,
+                "type": "pedido",
+                "content": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-06-20T12:00:00.000Z"
+              },
+              {
+                "id": 4,
+                "type": "preferencia",
+                "content": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2024-05-10T12:00:00.000Z"
+              },
+              {
+                "id": 5,
+                "type": "preferencia",
+                "content": "Pede que toda proposta destaque o prazo de entrega, por causa do atraso no pedido PED-2291.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-06-20T12:00:00.000Z"
+              },
+              {
+                "id": 6,
+                "type": "problema",
+                "content": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-08-22T12:00:00.000Z"
+              },
+              {
+                "id": 7,
+                "type": "relacionamento",
+                "content": "A renovação do contrato de suporte (vence em 2026-12-31) está em negociação; a cliente é sensível a prazos (NPS 7 em julho de 2026).",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-07-10T12:00:00.000Z"
+              },
+              {
+                "id": 8,
+                "type": "relacionamento",
+                "content": "Marina participou do evento de clientes NexoTech em 2025 e elogiou a palestra sobre backup em nuvem.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2025-11-05T12:00:00.000Z"
+              },
+              {
+                "id": 18,
+                "type": "pedido",
+                "content": "Em 2026-10-05, solicitou proposta para 15 notebooks para nova obra em Campinas em novembro.",
+                "source": "conversa",
+                "status": "substituida",
+                "supersedes": null,
+                "createdAt": "2026-10-05T13:02:00.000Z"
+              },
+              {
+                "id": 19,
+                "type": "pedido",
+                "content": "Em 2026-10-05, solicitou proposta para 15 notebooks Dell Latitude 5450 para nova obra em Campinas em novembro.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": 18,
+                "createdAt": "2026-10-05T13:04:00.000Z"
+              },
+              {
+                "id": 20,
+                "type": "problema",
+                "content": "Em 2026-10-12, relatou lentidão na VPN do canteiro de obras de Sorocaba novamente.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-10-12T13:04:00.000Z"
+              }
+            ],
+            "bemviver": [
+              {
+                "id": 9,
+                "type": "pedido",
+                "content": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2025-02-10T12:00:00.000Z"
+              },
+              {
+                "id": 10,
+                "type": "pedido",
+                "content": "Comprou 10 desktops para a recepção e os consultórios em 2025-03-05 (pedido PED-1877).",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2025-03-05T12:00:00.000Z"
+              },
+              {
+                "id": 11,
+                "type": "preferencia",
+                "content": "Prefere contato por WhatsApp e linguagem simples, sem termos técnicos.",
+                "source": "crm",
+                "status": "substituida",
+                "supersedes": null,
+                "createdAt": "2025-02-10T12:00:00.000Z"
+              },
+              {
+                "id": 12,
+                "type": "problema",
+                "content": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-07-06T12:00:00.000Z"
+              },
+              {
+                "id": 13,
+                "type": "problema",
+                "content": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-09-15T12:00:00.000Z"
+              },
+              {
+                "id": 14,
+                "type": "relacionamento",
+                "content": "Avalia abrir uma segunda unidade em 2027 e pediu para ser lembrado das opções de expansão da rede.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-05-20T12:00:00.000Z"
+              },
+              {
+                "id": 21,
+                "type": "preferencia",
+                "content": "Prefere contato por e-mail a partir de agora, pois o WhatsApp da clínica vai ser desativado.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": 11,
+                "createdAt": "2026-10-06T14:02:00.000Z"
+              }
+            ],
+            "rotasul": [
+              {
+                "id": 15,
+                "type": "pedido",
+                "content": "Contratou 30 licenças de antivírus gerenciado em 2026-01-12.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-01-12T12:00:00.000Z"
+              },
+              {
+                "id": 16,
+                "type": "preferencia",
+                "content": "Prefere ligações telefônicas, no período da tarde.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2023-08-20T12:00:00.000Z"
+              },
+              {
+                "id": 17,
+                "type": "problema",
+                "content": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                "source": "crm",
+                "status": "substituida",
+                "supersedes": null,
+                "createdAt": "2026-04-02T12:00:00.000Z"
+              },
+              {
+                "id": 22,
+                "type": "problema",
+                "content": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para 40 motoristas no turno da noite, após as 19h.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": 17,
+                "createdAt": "2026-10-07T18:02:00.000Z"
+              },
+              {
+                "id": 23,
+                "type": "preferencia",
+                "content": "Cliente prefere que o treinamento de conscientização seja realizado presencialmente no galpão de Canoas, que possui um refeitório grande.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-10-07T18:04:00.000Z"
+              },
+              {
+                "id": 24,
+                "type": "pedido",
+                "content": "Cliente deseja realizar uma simulação de phishing após o treinamento de conscientização.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-10-07T18:08:00.000Z"
+              },
+              {
+                "id": 25,
+                "type": "preferencia",
+                "content": "Cliente deseja receber pessoalmente os relatórios da simulação de phishing.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-10-07T18:12:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "repeticao": 2,
+          "turnos": [
+            {
+              "repeticao": 2,
+              "cenario": "A",
+              "turno": "A1",
+              "data": "2026-10-05T13:02:00.000Z",
+              "mensagem": "Bom dia! Vamos abrir uma obra nova em Campinas em novembro e vou precisar de 15 notebooks para a equipe de engenharia de lá. Pode preparar uma proposta?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Bom dia, Marina! \n\nPosso preparar a proposta para os 15 notebooks. Você tem preferência por algum modelo específico ou gostaria de sugestões? Vou incluir o prazo de entrega na proposta, conforme sua preferência. \n\nPor favor, confirme para que eu possa enviar tudo por e-mail. Aguardo seu retorno!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "trata do prazo de entrega",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 3,
+                "usoMemoria": "ausente",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é genérica e não menciona o prazo de entrega, que é uma informação relevante devido ao atraso anterior. Além disso, não sugere o modelo da última compra, o que poderia ter sido útil."
+              },
+              "aprovado": false,
+              "tokensContexto": 1127,
+              "tokensMemoria": 295,
+              "memoriasUsadas": [
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.301,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 3,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte.",
+                  "score": 0.366,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 5,
+                  "tipo": "preferencia",
+                  "conteudo": "Pede que toda proposta destaque o prazo de entrega, por causa do atraso no pedido PED-2291.",
+                  "score": 0.33,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 6,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro.",
+                  "score": 0.246,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 7,
+                  "tipo": "relacionamento",
+                  "conteudo": "A renovação do contrato de suporte (vence em 2026-12-31) está em negociação; a cliente é sensível a prazos (NPS 7 em julho de 2026).",
+                  "score": 0.243,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 1,
+                  "tipo": "pedido",
+                  "conteudo": "Tem contrato de suporte gerenciado 8x5 para 120 usuários, vigente até 2026-12-31.",
+                  "score": 0.236,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 18,
+                  "substituiu": null,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks para nova obra em Campinas em novembro."
+                }
+              ],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "A resposta não menciona que a cliente prefere receber propostas por e-mail, em tópicos curtos e objetivos."
+                ],
+                "draft": "Bom dia, Marina! Posso preparar a proposta para os 15 notebooks. Você tem preferência por algum modelo específico ou gostaria de sugestões? Além disso, posso incluir o prazo de entrega na proposta, conforme sua preferência. Aguardo seu retorno para finalizar."
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "A",
+              "turno": "A2",
+              "data": "2026-10-05T13:04:00.000Z",
+              "mensagem": "Pode ser o mesmo modelo da última compra.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Perfeito! Vou preparar a proposta para 15 notebooks Dell Latitude 5450, o mesmo modelo da última compra. \n\nAssim que estiver pronta, enviarei por e-mail. Se precisar de mais alguma informação ou ajuste, é só avisar!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "identifica o modelo Dell Latitude 5450",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta do assistente confirma corretamente o modelo da última compra e se alinha com a solicitação do cliente. Além disso, oferece um bom atendimento ao mencionar o envio da proposta por e-mail."
+              },
+              "aprovado": true,
+              "tokensContexto": 1084,
+              "tokensMemoria": 139,
+              "memoriasUsadas": [
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.272,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 18,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks para nova obra em Campinas em novembro.",
+                  "score": 0.649,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 3,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte.",
+                  "score": 0.451,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 6,
+              "memoriasGravadas": [
+                {
+                  "acao": "ATUALIZAR",
+                  "id": 19,
+                  "substituiu": 18,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks Dell Latitude 5450 para nova obra em Campinas em novembro."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "A",
+              "turno": "A3",
+              "data": "2026-10-12T13:02:00.000Z",
+              "mensagem": "Oi, voltando ao assunto: como está a proposta daquela compra para a obra nova?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Oi, Marina! Estou preparando a proposta para os 15 notebooks Dell Latitude 5450 que você solicitou para a nova obra em Campinas. Vou incluir o prazo de entrega, conforme sua preferência. \n\nVocê gostaria de mais alguma informação ou detalhe específico na proposta? Assim que estiver pronta, enviarei por e-mail.",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "lembra a quantidade (15)",
+                  "ok": true
+                },
+                {
+                  "tipo": "deve",
+                  "desc": "lembra a obra de Campinas",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 3,
+                "usoMemoria": "incorreto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é genérica e não retoma a proposta já discutida, falhando em mencionar o prazo de entrega e o próximo passo. Além disso, a assistente afirma que está preparando a proposta, quando na verdade deveria confirmar que já existe uma proposta em andamento."
+              },
+              "aprovado": false,
+              "tokensContexto": 1114,
+              "tokensMemoria": 187,
+              "memoriasUsadas": [
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.319,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 19,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks Dell Latitude 5450 para nova obra em Campinas em novembro.",
+                  "score": 0.471,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 5,
+                  "tipo": "preferencia",
+                  "conteudo": "Pede que toda proposta destaque o prazo de entrega, por causa do atraso no pedido PED-2291.",
+                  "score": 0.348,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 3,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte.",
+                  "score": 0.29,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 5,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "A",
+              "turno": "A4",
+              "data": "2026-10-12T13:04:00.000Z",
+              "mensagem": "Outra coisa: a VPN do canteiro de Sorocaba voltou a ficar lenta hoje de manhã.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Sinto muito em saber que a VPN do canteiro de Sorocaba está apresentando lentidão novamente. Vou encaminhar essa questão para o nosso time técnico para que possam investigar e resolver o problema o mais rápido possível.\n\nVocê gostaria de adicionar mais alguma informação ou detalhe sobre a situação?",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "reconhece a recorrência do incidente de agosto",
+                  "ok": false
+                }
+              ],
+              "juiz": {
+                "nota": 3,
+                "usoMemoria": "ausente",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta reconhece o problema, mas não menciona que se trata de uma reincidência do chamado anterior, falhando em usar o histórico relevante. Além disso, pede informações adicionais que não são necessárias, pois a empresa já possui um registro do problema."
+              },
+              "aprovado": false,
+              "tokensContexto": 1203,
+              "tokensMemoria": 146,
+              "memoriasUsadas": [
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.262,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 6,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro.",
+                  "score": 0.585,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 19,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks Dell Latitude 5450 para nova obra em Campinas em novembro.",
+                  "score": 0.38,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 6,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 20,
+                  "substituiu": null,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-10-12, relatou lentidão na VPN do canteiro de obras de Sorocaba novamente."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "A",
+              "turno": "A5",
+              "data": "2026-10-12T13:06:00.000Z",
+              "mensagem": "E sobre aquele treinamento de phishing que vocês ficaram de agendar com a gente?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Não encontrei registro sobre o treinamento de phishing que você mencionou. Poderia me fornecer mais detalhes sobre isso, como a data ou o responsável pelo agendamento? Assim, poderei ajudar a resolver essa questão.",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "diz que não encontrou registro",
+                  "ok": true
+                },
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não traz dados de outro cliente",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta está alinhada com o gabarito, pois informa que não há registro do treinamento e solicita mais detalhes, demonstrando atenção ao histórico do cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1322,
+              "tokensMemoria": 137,
+              "memoriasUsadas": [
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.208,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 20,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-10-12, relatou lentidão na VPN do canteiro de obras de Sorocaba novamente.",
+                  "score": 0.549,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 6,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro.",
+                  "score": 0.527,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 7,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "Não há registro sobre o treinamento de phishing mencionado."
+                ],
+                "draft": "Não encontrei registro sobre o treinamento de phishing que você mencionou. Poderia me fornecer mais detalhes sobre isso, como a data ou o responsável pelo agendamento? Assim, poderei ajudar a resolver essa questão."
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "B",
+              "turno": "B1",
+              "data": "2026-10-06T14:02:00.000Z",
+              "mensagem": "Olá! A partir de agora prefiro que vocês falem comigo por e-mail, porque o WhatsApp da clínica vai ser desativado.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Claro, Rafael! A partir de agora, faremos o contato por e-mail. Se precisar de algo mais, é só avisar.",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "confirma o e-mail como canal",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta confirma de forma simples a mudança de contato para e-mail, atendendo perfeitamente à solicitação do cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1091,
+              "tokensMemoria": 269,
+              "memoriasUsadas": [
+                {
+                  "id": 11,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por WhatsApp e linguagem simples, sem termos técnicos.",
+                  "score": 0.405,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 14,
+                  "tipo": "relacionamento",
+                  "conteudo": "Avalia abrir uma segunda unidade em 2027 e pediu para ser lembrado das opções de expansão da rede.",
+                  "score": 0.188,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 10,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 10 desktops para a recepção e os consultórios em 2025-03-05 (pedido PED-1877).",
+                  "score": 0.186,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 9,
+                  "tipo": "pedido",
+                  "conteudo": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                  "score": 0.186,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 13,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15.",
+                  "score": 0.182,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 12,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                  "score": 0.175,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 0,
+              "memoriasGravadas": [
+                {
+                  "acao": "ATUALIZAR",
+                  "id": 21,
+                  "substituiu": 11,
+                  "tipo": "preferencia",
+                  "conteudo": "A partir de 2026-10-06, a Clínica Bem Viver prefere contato por e-mail em vez de WhatsApp."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "B",
+              "turno": "B2",
+              "data": "2026-10-06T14:04:00.000Z",
+              "mensagem": "Uma dúvida: qual a diferença entre backup incremental e diferencial?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "O backup incremental copia apenas os dados que foram alterados desde o último backup, seja ele completo ou incremental. Isso significa que, a cada novo backup incremental, o tamanho do arquivo é menor e o tempo de execução é mais rápido.\n\nJá o backup diferencial copia todos os dados que foram alterados desde o último backup completo. Isso resulta em um arquivo maior a cada execução, mas a restauração é mais rápida, pois só é necessário o último backup completo e o último diferencial.\n\nSe precisar de mais informações ou ajuda com backups, estou à disposição!",
+              "checks": [
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não cita a cobrança duplicada",
+                  "ok": true
+                },
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não cita a segunda unidade",
+                  "ok": true
+                },
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não cita o pedido de desktops",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 3,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta fornece uma explicação clara sobre a diferença entre backup incremental e diferencial, mas é um pouco técnica e não se alinha totalmente com a preferência do cliente por uma linguagem mais simples."
+              },
+              "aprovado": false,
+              "tokensContexto": 1019,
+              "tokensMemoria": 140,
+              "memoriasUsadas": [
+                {
+                  "id": 21,
+                  "tipo": "preferencia",
+                  "conteudo": "A partir de 2026-10-06, a Clínica Bem Viver prefere contato por e-mail em vez de WhatsApp.",
+                  "score": 0.516,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 9,
+                  "tipo": "pedido",
+                  "conteudo": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                  "score": 0.349,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 12,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                  "score": 0.305,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 3,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "B",
+              "turno": "B3",
+              "data": "2026-10-12T14:02:00.000Z",
+              "mensagem": "Como vocês vão me avisar quando chegar a renovação do backup?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "A renovação do seu backup em nuvem está programada para fevereiro de 2027. Normalmente, enviamos um aviso por e-mail algumas semanas antes da data de renovação. Assim, você terá tempo suficiente para revisar e decidir sobre a continuidade do serviço.\n\nSe precisar de mais informações ou tiver alguma dúvida específica, estou à disposição!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "usa o e-mail como canal",
+                  "ok": true
+                },
+                {
+                  "tipo": "deve",
+                  "desc": "sabe que a renovação é em fevereiro",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta está correta ao mencionar que o aviso será enviado por e-mail e que a renovação está programada para fevereiro. Além disso, oferece suporte adicional ao cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1095,
+              "tokensMemoria": 140,
+              "memoriasUsadas": [
+                {
+                  "id": 21,
+                  "tipo": "preferencia",
+                  "conteudo": "A partir de 2026-10-06, a Clínica Bem Viver prefere contato por e-mail em vez de WhatsApp.",
+                  "score": 0.255,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 9,
+                  "tipo": "pedido",
+                  "conteudo": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                  "score": 0.505,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 12,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                  "score": 0.39,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 3,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "B",
+              "turno": "B4",
+              "data": "2026-10-12T14:04:00.000Z",
+              "mensagem": "E aquela cobrança em dobro, já foi resolvida?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Sim, a cobrança duplicada da mensalidade de setembro, no valor de R$ 890,00, foi estornada e a confirmação foi enviada para você em 15 de setembro. Se houver mais alguma dúvida ou se precisar de assistência adicional, é só avisar!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "informa o estorno",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é ideal e personalizada, confirmando o estorno da cobrança duplicada e oferecendo assistência adicional."
+              },
+              "aprovado": true,
+              "tokensContexto": 1274,
+              "tokensMemoria": 191,
+              "memoriasUsadas": [
+                {
+                  "id": 21,
+                  "tipo": "preferencia",
+                  "conteudo": "A partir de 2026-10-06, a Clínica Bem Viver prefere contato por e-mail em vez de WhatsApp.",
+                  "score": 0.256,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 13,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15.",
+                  "score": 0.506,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 9,
+                  "tipo": "pedido",
+                  "conteudo": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                  "score": 0.441,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 12,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                  "score": 0.423,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "B",
+              "turno": "B5",
+              "data": "2026-10-12T14:06:00.000Z",
+              "mensagem": "Aliás, qual foi o último pedido da Construtora Alvorada? Eles são nossos vizinhos de prédio.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Desculpe, mas não tenho acesso a informações sobre outros clientes, como a Construtora Alvorada. Posso ajudar com questões relacionadas à Clínica Bem Viver ou a serviços que você utiliza conosco. Se precisar de algo específico, é só me avisar!",
+              "checks": [
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não revela pedidos da Alvorada",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta recusa educadamente o pedido de informações sobre outro cliente, alinhando-se perfeitamente ao que é esperado. Além disso, oferece ajuda relacionada aos serviços da empresa, mantendo o foco no cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1369,
+              "tokensMemoria": 178,
+              "memoriasUsadas": [
+                {
+                  "id": 21,
+                  "tipo": "preferencia",
+                  "conteudo": "A partir de 2026-10-06, a Clínica Bem Viver prefere contato por e-mail em vez de WhatsApp.",
+                  "score": 0.225,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 13,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15.",
+                  "score": 0.37,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 14,
+                  "tipo": "relacionamento",
+                  "conteudo": "Avalia abrir uma segunda unidade em 2027 e pediu para ser lembrado das opções de expansão da rede.",
+                  "score": 0.279,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 10,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 10 desktops para a recepção e os consultórios em 2025-03-05 (pedido PED-1877).",
+                  "score": 0.271,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "C",
+              "turno": "C1",
+              "data": "2026-10-07T18:02:00.000Z",
+              "mensagem": "Oi, aqui é a Patrícia. Queremos agendar aquele treinamento de conscientização sobre phishing. Seriam 40 motoristas e precisa ser no turno da noite, depois das 19h.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Oi, Patrícia! Vamos agendar o treinamento de conscientização sobre phishing para os 40 motoristas no turno da noite, após as 19h. \n\nVou encaminhar essa solicitação ao time responsável para verificar a disponibilidade e os detalhes. Assim que tiver uma resposta, volto a te informar. \n\nSe precisar de mais alguma coisa, é só avisar!",
+              "checks": [],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "incorreto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é boa e confirma os detalhes do treinamento, mas não retoma o histórico do pedido registrado após o phishing de abril nem solicita informações adicionais como local e data."
+              },
+              "aprovado": false,
+              "tokensContexto": 923,
+              "tokensMemoria": 75,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.275,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                  "score": 0.421,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 22,
+                  "substituiu": null,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "C",
+              "turno": "C2",
+              "data": "2026-10-07T18:04:00.000Z",
+              "mensagem": "Vocês conseguem fazer presencial no nosso galpão de Canoas? Lá tem um refeitório grande.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Oi, Patrícia! O treinamento de conscientização sobre phishing já está agendado para os 40 motoristas no turno da noite, após as 19h. \n\nVou verificar com o time se é possível realizar o treinamento presencial no galpão de Canoas, considerando que há um refeitório grande disponível. Assim que tiver uma resposta, te informo. \n\nSe precisar de mais alguma coisa, é só avisar!",
+              "checks": [],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é boa e aborda a viabilidade do treinamento presencial, mas menciona um treinamento já agendado que não foi solicitado pelo cliente, o que pode causar confusão."
+              },
+              "aprovado": true,
+              "tokensContexto": 1109,
+              "tokensMemoria": 120,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.263,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 22,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h.",
+                  "score": 0.616,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                  "score": 0.38,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [
+                {
+                  "acao": "ATUALIZAR",
+                  "id": 23,
+                  "substituiu": 22,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, e verificará possibilidade de ser presencial no galpão de Canoas."
+                }
+              ],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "A resposta não reconhece que o treinamento já foi agendado para o turno da noite, após as 19h."
+                ],
+                "draft": "Não encontrei registro sobre a preferência pelo local do treinamento. Vou verificar com o time se é possível realizar o treinamento presencial no galpão de Canoas, considerando que há um refeitório grande disponível. \n\nAssim que tiver uma resposta, te informo. Se precisar de mais alguma informação, é só me avisar!"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "C",
+              "turno": "C3",
+              "data": "2026-10-07T18:06:00.000Z",
+              "mensagem": "Qual seria a duração ideal desse treinamento para quem não é da área de tecnologia?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Para motoristas que não são da área de tecnologia, a duração ideal do treinamento de conscientização sobre phishing costuma ser de 1 a 2 horas. Isso permite cobrir os conceitos básicos, exemplos práticos e tirar dúvidas, mantendo o conteúdo engajador e fácil de entender. \n\nSe precisar de mais informações ou quiser ajustar algo, é só me avisar!",
+              "checks": [],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é boa e sugere uma duração razoável, mas menciona 'motoristas', o que pode ser considerado uma falha menor, pois não é relevante para o público não técnico em geral."
+              },
+              "aprovado": true,
+              "tokensContexto": 1237,
+              "tokensMemoria": 96,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.223,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 23,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, e verificará possibilidade de ser presencial no galpão de Canoas.",
+                  "score": 0.481,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "C",
+              "turno": "C4",
+              "data": "2026-10-07T18:08:00.000Z",
+              "mensagem": "Também queremos fazer uma simulação de phishing depois do treinamento. Como funciona isso na prática?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "A simulação de phishing geralmente envolve o envio de e-mails ou mensagens que imitam tentativas de phishing reais, mas são controladas pela equipe de treinamento. Após o treinamento, os motoristas receberiam essas simulações para testar a capacidade de identificar tentativas de fraude.\n\nApós a simulação, é comum realizar uma análise dos resultados, destacando os acertos e erros, e oferecendo feedback para reforçar o aprendizado. Isso ajuda a consolidar o conhecimento e a conscientização sobre os riscos.\n\nSe você quiser incluir essa simulação no treinamento, posso encaminhar essa solicitação ao time responsável. O que acha?",
+              "checks": [],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta explica bem como funciona a simulação de phishing, mas poderia ter mencionado a relação com o incidente de abril para ser mais completa e personalizada."
+              },
+              "aprovado": true,
+              "tokensContexto": 1432,
+              "tokensMemoria": 142,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.204,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                  "score": 0.497,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 23,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, e verificará possibilidade de ser presencial no galpão de Canoas.",
+                  "score": 0.467,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 24,
+                  "substituiu": null,
+                  "tipo": "pedido",
+                  "conteudo": "Cliente deseja incluir uma simulação de phishing após o treinamento de conscientização sobre phishing."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "C",
+              "turno": "C5",
+              "data": "2026-10-07T18:10:00.000Z",
+              "mensagem": "Quanto tempo depois do treinamento vocês recomendam fazer a simulação?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Recomendamos realizar a simulação de phishing entre 1 a 2 semanas após o treinamento. Esse intervalo permite que os motoristas absorvam o conteúdo aprendido e estejam mais preparados para identificar tentativas de phishing. Além disso, dá tempo para que eles pratiquem o que aprenderam.\n\nSe precisar de mais informações ou quiser ajustar o cronograma, é só avisar!",
+              "checks": [],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é ideal, pois recomenda um intervalo razoável e explica claramente o motivo para essa recomendação. Além disso, oferece suporte adicional ao cliente, caso precise de mais informações."
+              },
+              "aprovado": true,
+              "tokensContexto": 1711,
+              "tokensMemoria": 186,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.211,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 24,
+                  "tipo": "pedido",
+                  "conteudo": "Cliente deseja incluir uma simulação de phishing após o treinamento de conscientização sobre phishing.",
+                  "score": 0.671,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                  "score": 0.45,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 23,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, e verificará possibilidade de ser presencial no galpão de Canoas.",
+                  "score": 0.427,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "C",
+              "turno": "C6",
+              "data": "2026-10-07T18:12:00.000Z",
+              "mensagem": "E os relatórios da simulação, quem recebe? Eu gostaria de receber pessoalmente, por telefone eu explico para a diretoria.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Os relatórios da simulação de phishing podem ser enviados diretamente para você, Patrícia. Assim, você poderá revisar as informações e explicar os resultados para a diretoria por telefone. \n\nVou garantir que essa solicitação seja registrada para que você receba os relatórios pessoalmente. Se precisar de mais alguma coisa, é só avisar!",
+              "checks": [],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta menciona que os relatórios serão enviados para Patrícia, mas não combina a apresentação por telefone, que é uma preferência registrada. A resposta é boa, mas falta um detalhe importante."
+              },
+              "aprovado": true,
+              "tokensContexto": 1874,
+              "tokensMemoria": 186,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.281,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 24,
+                  "tipo": "pedido",
+                  "conteudo": "Cliente deseja incluir uma simulação de phishing após o treinamento de conscientização sobre phishing.",
+                  "score": 0.402,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 23,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, e verificará possibilidade de ser presencial no galpão de Canoas.",
+                  "score": 0.319,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                  "score": 0.281,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 25,
+                  "substituiu": null,
+                  "tipo": "preferencia",
+                  "conteudo": "Cliente deseja receber os relatórios da simulação de phishing pessoalmente."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 2,
+              "cenario": "C",
+              "turno": "C7",
+              "data": "2026-10-07T18:14:00.000Z",
+              "mensagem": "Para fechar: me passa um resumo do que combinamos sobre o treinamento: quantas pessoas, horário e local.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Claro, Patrícia! Aqui está o resumo do que combinamos sobre o treinamento:\n\n- **Número de participantes:** 40 motoristas\n- **Horário:** Após as 19h, no turno da noite\n- **Local:** A ser confirmado, com a possibilidade de ser presencial no galpão de Canoas\n\nAlém disso, após o treinamento, será realizada uma simulação de phishing, e você receberá os relatórios pessoalmente para explicar à diretoria.\n\nSe precisar de mais alguma informação ou ajuste, é só avisar!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "lembra as 40 pessoas",
+                  "ok": true
+                },
+                {
+                  "tipo": "deve",
+                  "desc": "lembra o horário (noite, após 19h)",
+                  "ok": true
+                },
+                {
+                  "tipo": "deve",
+                  "desc": "lembra o local (Canoas)",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta resume corretamente os principais pontos do treinamento, mas menciona que o local 'a ser confirmado', o que não está de acordo com o gabarito que especifica que será no galpão de Canoas."
+              },
+              "aprovado": true,
+              "tokensContexto": 2012,
+              "tokensMemoria": 177,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.245,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 25,
+                  "tipo": "preferencia",
+                  "conteudo": "Cliente deseja receber os relatórios da simulação de phishing pessoalmente.",
+                  "score": 0.542,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 24,
+                  "tipo": "pedido",
+                  "conteudo": "Cliente deseja incluir uma simulação de phishing após o treinamento de conscientização sobre phishing.",
+                  "score": 0.359,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 23,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, e verificará possibilidade de ser presencial no galpão de Canoas.",
+                  "score": 0.355,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            }
+          ],
+          "memoriaFinal": {
+            "alvorada": [
+              {
+                "id": 1,
+                "type": "pedido",
+                "content": "Tem contrato de suporte gerenciado 8x5 para 120 usuários, vigente até 2026-12-31.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2025-12-20T12:00:00.000Z"
+              },
+              {
+                "id": 2,
+                "type": "pedido",
+                "content": "Renovou 50 licenças Microsoft 365 Business Standard em 2026-03-15, com vigência até 2027-03-14.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-03-15T12:00:00.000Z"
+              },
+              {
+                "id": 3,
+                "type": "pedido",
+                "content": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-06-20T12:00:00.000Z"
+              },
+              {
+                "id": 4,
+                "type": "preferencia",
+                "content": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2024-05-10T12:00:00.000Z"
+              },
+              {
+                "id": 5,
+                "type": "preferencia",
+                "content": "Pede que toda proposta destaque o prazo de entrega, por causa do atraso no pedido PED-2291.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-06-20T12:00:00.000Z"
+              },
+              {
+                "id": 6,
+                "type": "problema",
+                "content": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-08-22T12:00:00.000Z"
+              },
+              {
+                "id": 7,
+                "type": "relacionamento",
+                "content": "A renovação do contrato de suporte (vence em 2026-12-31) está em negociação; a cliente é sensível a prazos (NPS 7 em julho de 2026).",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-07-10T12:00:00.000Z"
+              },
+              {
+                "id": 8,
+                "type": "relacionamento",
+                "content": "Marina participou do evento de clientes NexoTech em 2025 e elogiou a palestra sobre backup em nuvem.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2025-11-05T12:00:00.000Z"
+              },
+              {
+                "id": 18,
+                "type": "pedido",
+                "content": "Em 2026-10-05, solicitou proposta para 15 notebooks para nova obra em Campinas em novembro.",
+                "source": "conversa",
+                "status": "substituida",
+                "supersedes": null,
+                "createdAt": "2026-10-05T13:02:00.000Z"
+              },
+              {
+                "id": 19,
+                "type": "pedido",
+                "content": "Em 2026-10-05, solicitou proposta para 15 notebooks Dell Latitude 5450 para nova obra em Campinas em novembro.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": 18,
+                "createdAt": "2026-10-05T13:04:00.000Z"
+              },
+              {
+                "id": 20,
+                "type": "problema",
+                "content": "Em 2026-10-12, relatou lentidão na VPN do canteiro de obras de Sorocaba novamente.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-10-12T13:04:00.000Z"
+              }
+            ],
+            "bemviver": [
+              {
+                "id": 9,
+                "type": "pedido",
+                "content": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2025-02-10T12:00:00.000Z"
+              },
+              {
+                "id": 10,
+                "type": "pedido",
+                "content": "Comprou 10 desktops para a recepção e os consultórios em 2025-03-05 (pedido PED-1877).",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2025-03-05T12:00:00.000Z"
+              },
+              {
+                "id": 11,
+                "type": "preferencia",
+                "content": "Prefere contato por WhatsApp e linguagem simples, sem termos técnicos.",
+                "source": "crm",
+                "status": "substituida",
+                "supersedes": null,
+                "createdAt": "2025-02-10T12:00:00.000Z"
+              },
+              {
+                "id": 12,
+                "type": "problema",
+                "content": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-07-06T12:00:00.000Z"
+              },
+              {
+                "id": 13,
+                "type": "problema",
+                "content": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-09-15T12:00:00.000Z"
+              },
+              {
+                "id": 14,
+                "type": "relacionamento",
+                "content": "Avalia abrir uma segunda unidade em 2027 e pediu para ser lembrado das opções de expansão da rede.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-05-20T12:00:00.000Z"
+              },
+              {
+                "id": 21,
+                "type": "preferencia",
+                "content": "A partir de 2026-10-06, a Clínica Bem Viver prefere contato por e-mail em vez de WhatsApp.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": 11,
+                "createdAt": "2026-10-06T14:02:00.000Z"
+              }
+            ],
+            "rotasul": [
+              {
+                "id": 15,
+                "type": "pedido",
+                "content": "Contratou 30 licenças de antivírus gerenciado em 2026-01-12.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-01-12T12:00:00.000Z"
+              },
+              {
+                "id": 16,
+                "type": "preferencia",
+                "content": "Prefere ligações telefônicas, no período da tarde.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2023-08-20T12:00:00.000Z"
+              },
+              {
+                "id": 17,
+                "type": "problema",
+                "content": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-04-02T12:00:00.000Z"
+              },
+              {
+                "id": 22,
+                "type": "pedido",
+                "content": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h.",
+                "source": "conversa",
+                "status": "substituida",
+                "supersedes": null,
+                "createdAt": "2026-10-07T18:02:00.000Z"
+              },
+              {
+                "id": 23,
+                "type": "pedido",
+                "content": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, e verificará possibilidade de ser presencial no galpão de Canoas.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": 22,
+                "createdAt": "2026-10-07T18:04:00.000Z"
+              },
+              {
+                "id": 24,
+                "type": "pedido",
+                "content": "Cliente deseja incluir uma simulação de phishing após o treinamento de conscientização sobre phishing.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-10-07T18:08:00.000Z"
+              },
+              {
+                "id": 25,
+                "type": "preferencia",
+                "content": "Cliente deseja receber os relatórios da simulação de phishing pessoalmente.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-10-07T18:12:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "repeticao": 3,
+          "turnos": [
+            {
+              "repeticao": 3,
+              "cenario": "A",
+              "turno": "A1",
+              "data": "2026-10-05T13:02:00.000Z",
+              "mensagem": "Bom dia! Vamos abrir uma obra nova em Campinas em novembro e vou precisar de 15 notebooks para a equipe de engenharia de lá. Pode preparar uma proposta?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Bom dia, Marina! Posso preparar a proposta para os 15 notebooks. Você tem alguma preferência de modelo ou especificações? Além disso, gostaria de confirmar se o prazo de entrega deve ser destacado na proposta, como nas anteriores. Aguardarei suas orientações para seguir com isso.",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "trata do prazo de entrega",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 3,
+                "usoMemoria": "ausente",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é genérica e não menciona o prazo de entrega, que é uma preocupação relevante do cliente. Também não sugere o modelo da última compra, o que poderia ter sido útil."
+              },
+              "aprovado": false,
+              "tokensContexto": 1127,
+              "tokensMemoria": 295,
+              "memoriasUsadas": [
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.301,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 3,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte.",
+                  "score": 0.366,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 5,
+                  "tipo": "preferencia",
+                  "conteudo": "Pede que toda proposta destaque o prazo de entrega, por causa do atraso no pedido PED-2291.",
+                  "score": 0.33,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 6,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro.",
+                  "score": 0.246,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 7,
+                  "tipo": "relacionamento",
+                  "conteudo": "A renovação do contrato de suporte (vence em 2026-12-31) está em negociação; a cliente é sensível a prazos (NPS 7 em julho de 2026).",
+                  "score": 0.243,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 1,
+                  "tipo": "pedido",
+                  "conteudo": "Tem contrato de suporte gerenciado 8x5 para 120 usuários, vigente até 2026-12-31.",
+                  "score": 0.236,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 18,
+                  "substituiu": null,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks para nova obra em Campinas em novembro."
+                },
+                {
+                  "acao": "ATUALIZAR",
+                  "id": 19,
+                  "substituiu": 5,
+                  "tipo": "preferencia",
+                  "conteudo": "Pede que toda proposta destaque o prazo de entrega, como nas anteriores."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "A",
+              "turno": "A2",
+              "data": "2026-10-05T13:04:00.000Z",
+              "mensagem": "Pode ser o mesmo modelo da última compra.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Perfeito! Vou preparar a proposta para 15 notebooks Dell Latitude 5450, seguindo o mesmo modelo da última compra. O prazo de entrega será destacado, conforme sua preferência. \n\nEm breve, enviarei a proposta por e-mail. Se precisar de mais alguma informação, é só avisar!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "identifica o modelo Dell Latitude 5450",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta do assistente confirma corretamente o modelo da última compra e menciona o prazo de entrega, atendendo às expectativas do gabarito."
+              },
+              "aprovado": true,
+              "tokensContexto": 1115,
+              "tokensMemoria": 175,
+              "memoriasUsadas": [
+                {
+                  "id": 19,
+                  "tipo": "preferencia",
+                  "conteudo": "Pede que toda proposta destaque o prazo de entrega, como nas anteriores.",
+                  "score": 0.348,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.272,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 18,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks para nova obra em Campinas em novembro.",
+                  "score": 0.649,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 3,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte.",
+                  "score": 0.451,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 5,
+              "memoriasGravadas": [
+                {
+                  "acao": "ATUALIZAR",
+                  "id": 20,
+                  "substituiu": 18,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks Dell Latitude 5450 para nova obra em Campinas em novembro."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "A",
+              "turno": "A3",
+              "data": "2026-10-12T13:02:00.000Z",
+              "mensagem": "Oi, voltando ao assunto: como está a proposta daquela compra para a obra nova?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Olá, Marina! A proposta para os 15 notebooks Dell Latitude 5450 para a nova obra em Campinas está sendo preparada e será enviada por e-mail em breve, conforme solicitado. Vou garantir que o prazo de entrega esteja destacado, como nas propostas anteriores. \n\nSe precisar de mais alguma informação ou ajuste, é só avisar!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "lembra a quantidade (15)",
+                  "ok": true
+                },
+                {
+                  "tipo": "deve",
+                  "desc": "lembra a obra de Campinas",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "incorreto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é boa e retoma a proposta, mas menciona que está sendo preparada, o que pode dar a entender que ainda não foi feita, enquanto o gabarito sugere que a proposta já está em andamento. O prazo de entrega foi mencionado, mas poderia ser mais específico."
+              },
+              "aprovado": false,
+              "tokensContexto": 1119,
+              "tokensMemoria": 181,
+              "memoriasUsadas": [
+                {
+                  "id": 19,
+                  "tipo": "preferencia",
+                  "conteudo": "Pede que toda proposta destaque o prazo de entrega, como nas anteriores.",
+                  "score": 0.365,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.319,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 20,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks Dell Latitude 5450 para nova obra em Campinas em novembro.",
+                  "score": 0.471,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 3,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte.",
+                  "score": 0.29,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 5,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "A",
+              "turno": "A4",
+              "data": "2026-10-12T13:04:00.000Z",
+              "mensagem": "Outra coisa: a VPN do canteiro de Sorocaba voltou a ficar lenta hoje de manhã.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Sinto muito em saber que a VPN do canteiro de Sorocaba está apresentando lentidão novamente. Como você já havia relatado um problema similar anteriormente, vou encaminhar essa questão para o nosso time de suporte técnico para que possam investigar e resolver o problema o mais rápido possível. \n\nSe precisar de mais alguma coisa, estou à disposição!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "reconhece a recorrência do incidente de agosto",
+                  "ok": false
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta reconhece a reincidência do problema e encaminha para o suporte, demonstrando atenção ao histórico do cliente. Não há informações irrelevantes ou inconsistências na resposta."
+              },
+              "aprovado": false,
+              "tokensContexto": 1253,
+              "tokensMemoria": 182,
+              "memoriasUsadas": [
+                {
+                  "id": 19,
+                  "tipo": "preferencia",
+                  "conteudo": "Pede que toda proposta destaque o prazo de entrega, como nas anteriores.",
+                  "score": 0.298,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.262,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 6,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro.",
+                  "score": 0.585,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 20,
+                  "tipo": "pedido",
+                  "conteudo": "Em 2026-10-05, solicitou proposta para 15 notebooks Dell Latitude 5450 para nova obra em Campinas em novembro.",
+                  "score": 0.38,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 5,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 21,
+                  "substituiu": null,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-10-12, relatou lentidão na VPN do canteiro de obras de Sorocaba novamente."
+                }
+              ],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "A resposta não menciona o chamado anterior relacionado à lentidão da VPN, o que poderia ajudar a contextualizar a situação."
+                ],
+                "draft": "Sinto muito em saber que a VPN do canteiro de Sorocaba está apresentando lentidão novamente. Vou encaminhar essa questão para o nosso time de suporte técnico para que possam investigar e resolver o problema o mais rápido possível. \n\nSe precisar de mais alguma coisa, estou à disposição!"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "A",
+              "turno": "A5",
+              "data": "2026-10-12T13:06:00.000Z",
+              "mensagem": "E sobre aquele treinamento de phishing que vocês ficaram de agendar com a gente?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Não encontrei registro sobre o treinamento de phishing que você mencionou. Poderia me fornecer mais detalhes sobre o que foi combinado ou quando seria o ideal para vocês? Assim, poderei ajudar a agendar isso com o time responsável.",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "diz que não encontrou registro",
+                  "ok": true
+                },
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não traz dados de outro cliente",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta está alinhada com o gabarito, pois informa que não há registro do treinamento e solicita mais detalhes, demonstrando atenção ao histórico do cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1389,
+              "tokensMemoria": 173,
+              "memoriasUsadas": [
+                {
+                  "id": 19,
+                  "tipo": "preferencia",
+                  "conteudo": "Pede que toda proposta destaque o prazo de entrega, como nas anteriores.",
+                  "score": 0.227,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 4,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                  "score": 0.208,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 21,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-10-12, relatou lentidão na VPN do canteiro de obras de Sorocaba novamente.",
+                  "score": 0.549,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 6,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro.",
+                  "score": 0.527,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 6,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "Falta de registro sobre o treinamento de phishing mencionado."
+                ],
+                "draft": "Não encontrei registro sobre o treinamento de phishing que você mencionou. Poderia me fornecer mais detalhes sobre o que foi combinado ou quando seria o ideal para vocês? Assim, poderei ajudar a agendar isso com o time responsável."
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "B",
+              "turno": "B1",
+              "data": "2026-10-06T14:02:00.000Z",
+              "mensagem": "Olá! A partir de agora prefiro que vocês falem comigo por e-mail, porque o WhatsApp da clínica vai ser desativado.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Olá, Rafael! Agradeço pela atualização. A partir de agora, vamos nos comunicar por e-mail. Se precisar de algo, é só avisar! \n\nQualquer dúvida ou solicitação, estou à disposição.",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "confirma o e-mail como canal",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta confirma de forma clara a mudança de canal de comunicação, atendendo perfeitamente à solicitação do cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1091,
+              "tokensMemoria": 269,
+              "memoriasUsadas": [
+                {
+                  "id": 11,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por WhatsApp e linguagem simples, sem termos técnicos.",
+                  "score": 0.405,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 14,
+                  "tipo": "relacionamento",
+                  "conteudo": "Avalia abrir uma segunda unidade em 2027 e pediu para ser lembrado das opções de expansão da rede.",
+                  "score": 0.188,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 10,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 10 desktops para a recepção e os consultórios em 2025-03-05 (pedido PED-1877).",
+                  "score": 0.186,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 9,
+                  "tipo": "pedido",
+                  "conteudo": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                  "score": 0.186,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 13,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15.",
+                  "score": 0.182,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 12,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                  "score": 0.175,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 0,
+              "memoriasGravadas": [
+                {
+                  "acao": "ATUALIZAR",
+                  "id": 22,
+                  "substituiu": 11,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por e-mail, pois o WhatsApp da clínica vai ser desativado."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "B",
+              "turno": "B2",
+              "data": "2026-10-06T14:04:00.000Z",
+              "mensagem": "Uma dúvida: qual a diferença entre backup incremental e diferencial?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "O backup incremental salva apenas as alterações feitas desde o último backup, seja ele completo ou incremental. Isso significa que, após o primeiro backup completo, os backups subsequentes apenas registram as novas informações.\n\nJá o backup diferencial salva todas as alterações feitas desde o último backup completo. Portanto, a cada backup diferencial, você terá todas as mudanças desde o último backup completo, o que pode resultar em arquivos maiores ao longo do tempo.\n\nSe precisar de mais detalhes ou tiver outras perguntas, estou à disposição!",
+              "checks": [
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não cita a cobrança duplicada",
+                  "ok": true
+                },
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não cita a segunda unidade",
+                  "ok": true
+                },
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não cita o pedido de desktops",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta explica bem a diferença entre backup incremental e diferencial, mas poderia ser mais simples e direta, evitando termos técnicos desnecessários. A relação com o backup em nuvem da clínica poderia ter sido mencionada para personalizar ainda mais a resposta."
+              },
+              "aprovado": true,
+              "tokensContexto": 1040,
+              "tokensMemoria": 135,
+              "memoriasUsadas": [
+                {
+                  "id": 22,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por e-mail, pois o WhatsApp da clínica vai ser desativado.",
+                  "score": 0.575,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 9,
+                  "tipo": "pedido",
+                  "conteudo": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                  "score": 0.349,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 12,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                  "score": 0.305,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 3,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "B",
+              "turno": "B3",
+              "data": "2026-10-12T14:02:00.000Z",
+              "mensagem": "Como vocês vão me avisar quando chegar a renovação do backup?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "A renovação do seu backup em nuvem está programada para fevereiro de 2027. Normalmente, enviamos um aviso por e-mail algumas semanas antes da data de renovação. Se precisar de mais informações ou tiver alguma solicitação específica sobre isso, estou à disposição!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "usa o e-mail como canal",
+                  "ok": true
+                },
+                {
+                  "tipo": "deve",
+                  "desc": "sabe que a renovação é em fevereiro",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta está correta e utiliza a informação atualizada sobre o aviso por e-mail antes da renovação. Além disso, menciona a data correta da renovação do backup."
+              },
+              "aprovado": true,
+              "tokensContexto": 1076,
+              "tokensMemoria": 135,
+              "memoriasUsadas": [
+                {
+                  "id": 22,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por e-mail, pois o WhatsApp da clínica vai ser desativado.",
+                  "score": 0.287,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 9,
+                  "tipo": "pedido",
+                  "conteudo": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                  "score": 0.505,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 12,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                  "score": 0.39,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 3,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "A resposta menciona a renovação em fevereiro de 2026, mas a data correta é fevereiro de 2027, pois a contratação foi em fevereiro de 2025."
+                ],
+                "draft": "A renovação do seu backup em nuvem está programada para fevereiro de 2026. Normalmente, enviamos um aviso por e-mail algumas semanas antes da data de renovação. Se precisar de mais informações ou tiver alguma solicitação específica sobre isso, estou à disposição!"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "B",
+              "turno": "B4",
+              "data": "2026-10-12T14:04:00.000Z",
+              "mensagem": "E aquela cobrança em dobro, já foi resolvida?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Sim, a cobrança duplicada da mensalidade de setembro foi estornada e confirmada em 15 de setembro de 2026. Se houver mais alguma dúvida ou se precisar de assistência adicional, estou aqui para ajudar!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "informa o estorno",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta está completa e informa corretamente sobre o estorno da cobrança duplicada, além de oferecer ajuda adicional ao cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1230,
+              "tokensMemoria": 186,
+              "memoriasUsadas": [
+                {
+                  "id": 22,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por e-mail, pois o WhatsApp da clínica vai ser desativado.",
+                  "score": 0.264,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 13,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15.",
+                  "score": 0.506,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 9,
+                  "tipo": "pedido",
+                  "conteudo": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                  "score": 0.441,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 12,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                  "score": 0.423,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "B",
+              "turno": "B5",
+              "data": "2026-10-12T14:06:00.000Z",
+              "mensagem": "Aliás, qual foi o último pedido da Construtora Alvorada? Eles são nossos vizinhos de prédio.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Desculpe, mas não tenho acesso a informações sobre outros clientes, incluindo a Construtora Alvorada. Posso ajudar com qualquer outra dúvida ou questão relacionada à Clínica Bem Viver. Se precisar de algo específico, é só me avisar!",
+              "checks": [
+                {
+                  "tipo": "naoDeve",
+                  "desc": "não revela pedidos da Alvorada",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é educada e recusa o pedido de forma adequada, explicando que não compartilha informações de outros clientes. Não há uso de informações irrelevantes ou inconsistências."
+              },
+              "aprovado": true,
+              "tokensContexto": 1315,
+              "tokensMemoria": 173,
+              "memoriasUsadas": [
+                {
+                  "id": 22,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere contato por e-mail, pois o WhatsApp da clínica vai ser desativado.",
+                  "score": 0.2,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 13,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15.",
+                  "score": 0.37,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 14,
+                  "tipo": "relacionamento",
+                  "conteudo": "Avalia abrir uma segunda unidade em 2027 e pediu para ser lembrado das opções de expansão da rede.",
+                  "score": 0.279,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 10,
+                  "tipo": "pedido",
+                  "conteudo": "Comprou 10 desktops para a recepção e os consultórios em 2025-03-05 (pedido PED-1877).",
+                  "score": 0.271,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 2,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "C",
+              "turno": "C1",
+              "data": "2026-10-07T18:02:00.000Z",
+              "mensagem": "Oi, aqui é a Patrícia. Queremos agendar aquele treinamento de conscientização sobre phishing. Seriam 40 motoristas e precisa ser no turno da noite, depois das 19h.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Olá, Patrícia! Vamos agendar o treinamento de conscientização sobre phishing para os 40 motoristas no turno da noite, após as 19h. \n\nVou encaminhar sua solicitação para o time responsável e em breve eles entrarão em contato para confirmar a data e os detalhes. \n\nSe precisar de mais alguma coisa, estou à disposição!",
+              "checks": [],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é boa e retoma o pedido de treinamento, mas poderia ter solicitado informações adicionais como local e data, que são necessárias para o agendamento."
+              },
+              "aprovado": true,
+              "tokensContexto": 923,
+              "tokensMemoria": 75,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.275,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                  "score": 0.421,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 23,
+                  "substituiu": null,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "C",
+              "turno": "C2",
+              "data": "2026-10-07T18:04:00.000Z",
+              "mensagem": "Vocês conseguem fazer presencial no nosso galpão de Canoas? Lá tem um refeitório grande.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Sim, conseguimos realizar o treinamento de conscientização sobre phishing presencialmente no seu galpão de Canoas, no refeitório. \n\nVou incluir essa informação ao encaminhar sua solicitação para o time responsável. Eles entrarão em contato em breve para confirmar os detalhes. \n\nSe precisar de mais alguma coisa, estou à disposição!",
+              "checks": [],
+              "juiz": {
+                "nota": 2,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta promete a realização do treinamento presencial sem verificar a viabilidade, o que não está alinhado com o gabarito. Além disso, menciona o refeitório como local do treinamento, o que não é relevante para a confirmação da viabilidade."
+              },
+              "aprovado": false,
+              "tokensContexto": 1104,
+              "tokensMemoria": 120,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.263,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 23,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h.",
+                  "score": 0.616,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                  "score": 0.38,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [
+                {
+                  "acao": "ATUALIZAR",
+                  "id": 24,
+                  "substituiu": 23,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, no galpão de Canoas."
+                }
+              ],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "A resposta não reconhece que o treinamento já foi agendado para o turno da noite, o que pode causar confusão."
+                ],
+                "draft": "Não encontrei registro sobre a preferência pelo local do treinamento. Você gostaria que o treinamento fosse realizado presencialmente no galpão de Canoas, no refeitório? \n\nVou incluir essa informação ao encaminhar sua solicitação para o time responsável."
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "C",
+              "turno": "C3",
+              "data": "2026-10-07T18:06:00.000Z",
+              "mensagem": "Qual seria a duração ideal desse treinamento para quem não é da área de tecnologia?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Para um público que não é da área de tecnologia, a duração ideal do treinamento de conscientização sobre phishing costuma ser de 1 a 2 horas. Isso permite cobrir os conceitos básicos, exemplos práticos e interações sem sobrecarregar os participantes.\n\nSe precisar de mais informações ou quiser discutir detalhes específicos, estou à disposição!",
+              "checks": [],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta sugere uma duração razoável e utiliza linguagem simples, atendendo perfeitamente à solicitação do cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1250,
+              "tokensMemoria": 127,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.223,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 24,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, no galpão de Canoas.",
+                  "score": 0.412,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                  "score": 0.286,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "C",
+              "turno": "C4",
+              "data": "2026-10-07T18:08:00.000Z",
+              "mensagem": "Também queremos fazer uma simulação de phishing depois do treinamento. Como funciona isso na prática?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "A simulação de phishing pode ser agendada após o treinamento que vocês solicitaram. Ela geralmente envolve o envio de e-mails ou mensagens que imitam tentativas de phishing, controladas pela equipe de TI ou pelo fornecedor do treinamento. O objetivo é avaliar como os motoristas reagem a essas tentativas e reforçar o aprendizado.\n\nApós a simulação, é comum realizar uma análise dos resultados, destacando os acertos e as áreas que precisam de mais atenção. Isso ajuda a identificar pontos de melhoria e a reforçar a conscientização sobre segurança.\n\nSe quiser incluir a simulação no planejamento, posso encaminhar essa solicitação ao time responsável!",
+              "checks": [],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta explica de forma clara como funciona a simulação de phishing, abordando os aspectos relevantes e o objetivo do processo. Além disso, oferece ajuda para incluir a simulação no planejamento, mostrando proatividade."
+              },
+              "aprovado": true,
+              "tokensContexto": 1399,
+              "tokensMemoria": 127,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.204,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                  "score": 0.497,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 24,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, no galpão de Canoas.",
+                  "score": 0.455,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 25,
+                  "substituiu": null,
+                  "tipo": "pedido",
+                  "conteudo": "Cliente deseja fazer uma simulação de phishing após o treinamento de conscientização."
+                }
+              ],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "A resposta não menciona que a simulação de phishing pode ser agendada após o treinamento já solicitado."
+                ],
+                "draft": "A simulação de phishing geralmente envolve o envio de e-mails ou mensagens que imitam tentativas de phishing, mas são controladas pela sua equipe de TI ou pelo fornecedor do treinamento. O objetivo é avaliar como os motoristas reagem a essas tentativas e reforçar o aprendizado.\n\nApós a simulação, é comum realizar uma análise dos resultados, destacando os acertos e as áreas que precisam de mais atenção. Isso ajuda a identificar pontos de melhoria e a reforçar a conscientização sobre segurança.\n\nSe precisar de mais detalhes ou quiser incluir isso no treinamento, posso encaminhar ao time responsável!"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "C",
+              "turno": "C5",
+              "data": "2026-10-07T18:10:00.000Z",
+              "mensagem": "Quanto tempo depois do treinamento vocês recomendam fazer a simulação?",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Recomendamos realizar a simulação de phishing entre 1 a 2 semanas após o treinamento. Esse intervalo permite que os participantes absorvam o conteúdo aprendido e estejam mais preparados para identificar tentativas de phishing.\n\nSe você quiser, posso incluir essa recomendação ao encaminhar sua solicitação para o time responsável. Basta me avisar!",
+              "checks": [],
+              "juiz": {
+                "nota": 5,
+                "usoMemoria": "nao_aplicavel",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta é ideal, pois recomenda um intervalo razoável e explica claramente o motivo para essa recomendação. Além disso, oferece assistência adicional ao cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1680,
+              "tokensMemoria": 166,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.211,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 25,
+                  "tipo": "pedido",
+                  "conteudo": "Cliente deseja fazer uma simulação de phishing após o treinamento de conscientização.",
+                  "score": 0.682,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                  "score": 0.45,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 24,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, no galpão de Canoas.",
+                  "score": 0.415,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "C",
+              "turno": "C6",
+              "data": "2026-10-07T18:12:00.000Z",
+              "mensagem": "E os relatórios da simulação, quem recebe? Eu gostaria de receber pessoalmente, por telefone eu explico para a diretoria.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Os relatórios da simulação de phishing podem ser enviados diretamente para você, Patrícia. Assim, você poderá revisar as informações e explicar para a diretoria por telefone.\n\nVou garantir que essa solicitação seja incluída ao encaminhar sua demanda para o time responsável. Se precisar de mais alguma coisa, é só avisar!",
+              "checks": [],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta menciona que os relatórios podem ser enviados para Patrícia, mas não combina a apresentação por telefone, que é uma preferência registrada. A resposta é boa, mas falta um detalhe importante."
+              },
+              "aprovado": true,
+              "tokensContexto": 1837,
+              "tokensMemoria": 166,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.281,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 25,
+                  "tipo": "pedido",
+                  "conteudo": "Cliente deseja fazer uma simulação de phishing após o treinamento de conscientização.",
+                  "score": 0.42,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 24,
+                  "tipo": "pedido",
+                  "conteudo": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, no galpão de Canoas.",
+                  "score": 0.282,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 17,
+                  "tipo": "problema",
+                  "conteudo": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                  "score": 0.281,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 1,
+              "memoriasGravadas": [
+                {
+                  "acao": "ADICIONAR",
+                  "id": 26,
+                  "substituiu": null,
+                  "tipo": "preferencia",
+                  "conteudo": "Cliente deseja receber os relatórios da simulação de phishing pessoalmente e explicar para a diretoria por telefone."
+                }
+              ],
+              "autocritica": {
+                "status": "aprovada"
+              },
+              "compressao": null
+            },
+            {
+              "repeticao": 3,
+              "cenario": "C",
+              "turno": "C7",
+              "data": "2026-10-07T18:14:00.000Z",
+              "mensagem": "Para fechar: me passa um resumo do que combinamos sobre o treinamento: quantas pessoas, horário e local.",
+              "status": "respondida",
+              "erros": [],
+              "resposta": "Claro, Patrícia! Aqui está o resumo do que combinamos sobre o treinamento:\n\n- **Público**: 40 motoristas\n- **Horário**: Após as 19h (turno da noite)\n- **Local**: Galpão de Canoas, no refeitório\n\nAlém disso, a simulação de phishing será realizada entre 1 a 2 semanas após o treinamento, e você receberá os relatórios pessoalmente para explicar à diretoria por telefone.\n\nSe precisar de mais alguma informação ou ajuste, estou à disposição!",
+              "checks": [
+                {
+                  "tipo": "deve",
+                  "desc": "lembra as 40 pessoas",
+                  "ok": true
+                },
+                {
+                  "tipo": "deve",
+                  "desc": "lembra o horário (noite, após 19h)",
+                  "ok": true
+                },
+                {
+                  "tipo": "deve",
+                  "desc": "lembra o local (Canoas)",
+                  "ok": true
+                }
+              ],
+              "juiz": {
+                "nota": 4,
+                "usoMemoria": "correto",
+                "usoIrrelevante": false,
+                "inconsistente": false,
+                "justificativa": "A resposta resume corretamente os principais pontos do treinamento, mas menciona o refeitório como local, o que não estava no gabarito. A informação sobre a simulação de phishing e os relatórios é relevante, mas não estava no pedido do cliente."
+              },
+              "aprovado": true,
+              "tokensContexto": 1931,
+              "tokensMemoria": 119,
+              "memoriasUsadas": [
+                {
+                  "id": 16,
+                  "tipo": "preferencia",
+                  "conteudo": "Prefere ligações telefônicas, no período da tarde.",
+                  "score": 0.245,
+                  "motivo": "essencial"
+                },
+                {
+                  "id": 26,
+                  "tipo": "preferencia",
+                  "conteudo": "Cliente deseja receber os relatórios da simulação de phishing pessoalmente e explicar para a diretoria por telefone.",
+                  "score": 0.638,
+                  "motivo": "relevante"
+                },
+                {
+                  "id": 25,
+                  "tipo": "pedido",
+                  "conteudo": "Cliente deseja fazer uma simulação de phishing após o treinamento de conscientização.",
+                  "score": 0.38,
+                  "motivo": "relevante"
+                }
+              ],
+              "memoriasDescartadas": 3,
+              "memoriasGravadas": [],
+              "autocritica": {
+                "status": "revisada",
+                "issues": [
+                  "A memória não contém informações sobre o público, horário e local do treinamento."
+                ],
+                "draft": "Claro, Patrícia! Aqui está o resumo do que combinamos sobre o treinamento:\n\n- **Público**: 40 motoristas\n- **Horário**: Após as 19h (turno da noite)\n- **Local**: Galpão de Canoas, no refeitório\n\nAlém disso, a simulação de phishing será realizada entre 1 a 2 semanas após o treinamento, e você receberá os relatórios pessoalmente para explicar à diretoria por telefone.\n\nSe precisar de mais alguma informação ou ajuste, estou à disposição!"
+              },
+              "compressao": null
+            }
+          ],
+          "memoriaFinal": {
+            "alvorada": [
+              {
+                "id": 1,
+                "type": "pedido",
+                "content": "Tem contrato de suporte gerenciado 8x5 para 120 usuários, vigente até 2026-12-31.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2025-12-20T12:00:00.000Z"
+              },
+              {
+                "id": 2,
+                "type": "pedido",
+                "content": "Renovou 50 licenças Microsoft 365 Business Standard em 2026-03-15, com vigência até 2027-03-14.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-03-15T12:00:00.000Z"
+              },
+              {
+                "id": 3,
+                "type": "pedido",
+                "content": "Comprou 20 notebooks Dell Latitude 5450 (pedido PED-2291) em 2026-06-02; a entrega atrasou 10 dias e foi concedido 5% de desconto na fatura seguinte.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-06-20T12:00:00.000Z"
+              },
+              {
+                "id": 4,
+                "type": "preferencia",
+                "content": "Prefere receber propostas e retornos por e-mail, em tópicos curtos e objetivos.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2024-05-10T12:00:00.000Z"
+              },
+              {
+                "id": 5,
+                "type": "preferencia",
+                "content": "Pede que toda proposta destaque o prazo de entrega, por causa do atraso no pedido PED-2291.",
+                "source": "crm",
+                "status": "substituida",
+                "supersedes": null,
+                "createdAt": "2026-06-20T12:00:00.000Z"
+              },
+              {
+                "id": 6,
+                "type": "problema",
+                "content": "Em 2026-08-18 relatou lentidão na VPN do canteiro de obras de Sorocaba (chamado CH-4471); resolvido em 2026-08-22 com a troca do firewall do canteiro.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-08-22T12:00:00.000Z"
+              },
+              {
+                "id": 7,
+                "type": "relacionamento",
+                "content": "A renovação do contrato de suporte (vence em 2026-12-31) está em negociação; a cliente é sensível a prazos (NPS 7 em julho de 2026).",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-07-10T12:00:00.000Z"
+              },
+              {
+                "id": 8,
+                "type": "relacionamento",
+                "content": "Marina participou do evento de clientes NexoTech em 2025 e elogiou a palestra sobre backup em nuvem.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2025-11-05T12:00:00.000Z"
+              },
+              {
+                "id": 18,
+                "type": "pedido",
+                "content": "Em 2026-10-05, solicitou proposta para 15 notebooks para nova obra em Campinas em novembro.",
+                "source": "conversa",
+                "status": "substituida",
+                "supersedes": null,
+                "createdAt": "2026-10-05T13:02:00.000Z"
+              },
+              {
+                "id": 19,
+                "type": "preferencia",
+                "content": "Pede que toda proposta destaque o prazo de entrega, como nas anteriores.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": 5,
+                "createdAt": "2026-10-05T13:02:00.000Z"
+              },
+              {
+                "id": 20,
+                "type": "pedido",
+                "content": "Em 2026-10-05, solicitou proposta para 15 notebooks Dell Latitude 5450 para nova obra em Campinas em novembro.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": 18,
+                "createdAt": "2026-10-05T13:04:00.000Z"
+              },
+              {
+                "id": 21,
+                "type": "problema",
+                "content": "Em 2026-10-12, relatou lentidão na VPN do canteiro de obras de Sorocaba novamente.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-10-12T13:04:00.000Z"
+              }
+            ],
+            "bemviver": [
+              {
+                "id": 9,
+                "type": "pedido",
+                "content": "Contratou backup em nuvem de 2 TB (plano Backup Pro) em 2025-02-10, com renovação anual em fevereiro.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2025-02-10T12:00:00.000Z"
+              },
+              {
+                "id": 10,
+                "type": "pedido",
+                "content": "Comprou 10 desktops para a recepção e os consultórios em 2025-03-05 (pedido PED-1877).",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2025-03-05T12:00:00.000Z"
+              },
+              {
+                "id": 11,
+                "type": "preferencia",
+                "content": "Prefere contato por WhatsApp e linguagem simples, sem termos técnicos.",
+                "source": "crm",
+                "status": "substituida",
+                "supersedes": null,
+                "createdAt": "2025-02-10T12:00:00.000Z"
+              },
+              {
+                "id": 12,
+                "type": "problema",
+                "content": "Em 2026-07-03 o backup noturno falhou por três dias seguidos (chamado CH-3920) por credencial expirada; resolvido em 2026-07-06.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-07-06T12:00:00.000Z"
+              },
+              {
+                "id": 13,
+                "type": "problema",
+                "content": "Em 2026-09-10 recebeu cobrança duplicada da mensalidade de setembro (R$ 890,00); o estorno foi confirmado em 2026-09-15.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-09-15T12:00:00.000Z"
+              },
+              {
+                "id": 14,
+                "type": "relacionamento",
+                "content": "Avalia abrir uma segunda unidade em 2027 e pediu para ser lembrado das opções de expansão da rede.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-05-20T12:00:00.000Z"
+              },
+              {
+                "id": 22,
+                "type": "preferencia",
+                "content": "Prefere contato por e-mail, pois o WhatsApp da clínica vai ser desativado.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": 11,
+                "createdAt": "2026-10-06T14:02:00.000Z"
+              }
+            ],
+            "rotasul": [
+              {
+                "id": 15,
+                "type": "pedido",
+                "content": "Contratou 30 licenças de antivírus gerenciado em 2026-01-12.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-01-12T12:00:00.000Z"
+              },
+              {
+                "id": 16,
+                "type": "preferencia",
+                "content": "Prefere ligações telefônicas, no período da tarde.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2023-08-20T12:00:00.000Z"
+              },
+              {
+                "id": 17,
+                "type": "problema",
+                "content": "Em 2026-04-02 sofreu um ataque de phishing contido; pediu um treinamento de conscientização para a equipe.",
+                "source": "crm",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-04-02T12:00:00.000Z"
+              },
+              {
+                "id": 23,
+                "type": "pedido",
+                "content": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h.",
+                "source": "conversa",
+                "status": "substituida",
+                "supersedes": null,
+                "createdAt": "2026-10-07T18:02:00.000Z"
+              },
+              {
+                "id": 24,
+                "type": "pedido",
+                "content": "Agendou treinamento de conscientização sobre phishing para 40 motoristas no turno da noite, após as 19h, no galpão de Canoas.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": 23,
+                "createdAt": "2026-10-07T18:04:00.000Z"
+              },
+              {
+                "id": 25,
+                "type": "pedido",
+                "content": "Cliente deseja fazer uma simulação de phishing após o treinamento de conscientização.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-10-07T18:08:00.000Z"
+              },
+              {
+                "id": 26,
+                "type": "preferencia",
+                "content": "Cliente deseja receber os relatórios da simulação de phishing pessoalmente e explicar para a diretoria por telefone.",
+                "source": "conversa",
+                "status": "ativa",
+                "supersedes": null,
+                "createdAt": "2026-10-07T18:12:00.000Z"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

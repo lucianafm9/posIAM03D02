@@ -9,7 +9,8 @@ const MODE_LABEL: Record<MemoryMode, string> = {
   sem_filtro: "Memória sem filtro (excesso)",
 };
 
-const ALL_TURNS: ScenarioTurn[] = SCENARIOS.flatMap((s) => s.sessoes.flatMap((ss) => ss.turnos));
+let ACTIVE = SCENARIOS;
+let ALL_TURNS: ScenarioTurn[] = SCENARIOS.flatMap((s) => s.sessoes.flatMap((ss) => ss.turnos));
 const findTurn = (id: string) => ALL_TURNS.find((t) => t.id === id)!;
 
 const avg = (values: number[]) => (values.length === 0 ? 0 : values.reduce((a, b) => a + b, 0) / values.length);
@@ -115,7 +116,7 @@ function memoryEvolution(execution: ModeExecution | undefined): string {
 
 /** Tokens de contexto por turno do cenário de conversa longa, marcando onde a compressão aconteceu. */
 function compressionSection(results: ExperimentResults): string[] {
-  const scenario = SCENARIOS.find((s) => s.id === "C");
+  const scenario = ACTIVE.find((s) => s.id === "C");
   if (!scenario) return [];
   const ids = scenario.sessoes.flatMap((s) => s.turnos.map((t) => t.id));
   const runs = results.modos.filter((r) => r.modo !== "sem_memoria");
@@ -179,6 +180,8 @@ function variability(results: ExperimentResults): string[] {
 }
 
 export function buildReport(results: ExperimentResults): string {
+  ACTIVE = SCENARIOS.filter((s) => !results.cenarios || results.cenarios.includes(s.id));
+  ALL_TURNS = ACTIVE.flatMap((s) => s.sessoes.flatMap((ss) => ss.turnos));
   const completa = results.modos.find((r) => r.modo === "completa");
   const semFiltro = results.modos.find((r) => r.modo === "sem_filtro");
 
@@ -187,6 +190,8 @@ export function buildReport(results: ExperimentResults): string {
     "",
     `Gerado em ${results.geradoEm} · modelo \`${results.modelo}\` · juiz \`${results.modeloJuiz}\` · embeddings \`${results.modeloEmbedding}\` · ` +
       `${results.repeticoes} execução(ões) por modo · autocrítica ${results.autocritica ? "ligada" : "desligada"}` +
+      (results.orcamentoMemoriaCurta ? ` · orçamento da memória curta ${results.orcamentoMemoriaCurta} tokens` : "") +
+      (results.cenarios && results.cenarios.length < SCENARIOS.length ? ` · cenários ${results.cenarios.join(", ")}` : "") +
       (results.retentativasDeCredito ? ` · ${results.retentativasDeCredito} chamada(s) repetida(s) por erro intermitente de crédito da OpenAI` : "") +
       ".",
     "",
@@ -234,7 +239,7 @@ export function buildReport(results: ExperimentResults): string {
   );
 
   lines.push("## Exemplos de interação multi-turno (execução 1)", "");
-  for (const scenario of SCENARIOS) {
+  for (const scenario of ACTIVE) {
     lines.push(`### Cenário ${scenario.id}: ${scenario.titulo}`, "");
     scenario.sessoes.forEach((session, index) => {
       lines.push(`_Atendimento ${index + 1} (${session.data.slice(0, 10)})_`, "");

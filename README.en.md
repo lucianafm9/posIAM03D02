@@ -207,6 +207,8 @@ sliding window only") and the conversation goes on. Compression is attempted aga
 That is why compression can be aggressive: the important facts have already been extracted to long-term memory after
 every message. The compression summary exists to keep continuity within the conversation.
 
+**Result with the real model:** with the budget reduced to 500 tokens, compression summarized the first messages of the long conversation, and the details stated in them were recalled at the end in 6 out of 6 runs ([details](#results-experiment-with-the-real-model-answers-and-judge)).
+
 ### Parameters and verification
 
 | Parameter ([`settings.ts`](src/config/settings.ts)) | Value | Effect |
@@ -485,15 +487,65 @@ With these fixes, the result went to 12 of 15 facts, with no new noise.
 
 ### Results: experiment with the real model (answers and judge)
 
-**Pending:** requires an OpenAI key. `npm run experiment` generates [`results/relatorio.md`](results/relatorio.md)
-with answer quality in each mode, scored by the checks and the judge over 3 runs.
+Run on Oct 13, 2026 with `gpt-4o-mini` (answers and judge) and `text-embedding-3-small`: 4 modes × 17 messages ×
+3 runs = 204 answers, all generated and scored, with no API failures. Full report, with transcripts, in
+[`results/relatorio.md`](results/relatorio.md); data in [`results/experimento.json`](results/experimento.json).
+
+| Mode | Pass rate | Passes per run | Mean score (1-5) | Checks ok | Memory used correctly | Memory missing | Irrelevant use | Context tokens (avg) | Long-term memory tokens (avg) |
+|---|---|---|---|---|---|---|---|---|---|
+| No memory | **19/51 (37%)** | 5 · 7 · 7 | 3.14 | 27/51 | 3 | 24 | 0 | 458 | 0 |
+| Short-term only | **28/51 (55%)** | 9 · 10 · 9 | 3.53 | 31/51 | 8 | 19 | 0 | 722 | 0 |
+| **Full memory (proposed)** | **39/51 (76%)** | 13 · 14 · 12 | **4.41** | 46/51 | 18 | 6 | 0 | 1,281 | ~167 |
+| Unfiltered | **40/51 (78%)** | 13 · 14 · 13 | 4.47 | 47/51 | 20 | 3 | 0 | 1,391 | ~286 |
+
+Turns that depend on history (passes across the 3 runs):
+
+| Turn | What it requires | No memory | Short-term | Full | Unfiltered |
+|---|---|---|---|---|---|
+| A2 | Know the model of the "last purchase" | 0/3 | 0/3 | **3/3** | 3/3 |
+| A5 | Don't invent a topic that belongs to another client | 0/3 | 0/3 | **3/3** | 3/3 |
+| B3 | Use the **updated** preference (email) and the renewal date | 0/3 | 0/3 | **3/3** | 3/3 |
+| B4 | Remember the duplicate charge and the refund | 0/3 | 0/3 | **3/3** | 3/3 |
+| C7 | Remember details from the start of a long conversation | 0/3 | 3/3 | 3/3 | 3/3 |
+| A1, A3, A4 | See "Limitations" below | 0/3 | 0/3 | 0/3 | 0/3 |
+
+**Analysis**
+
+- **Memory doubles the pass rate.** It goes from 37% (no memory) to 76% (full memory), and the mean score from 3.14 to 4.41. Without memory, the judge flagged "memory missing" in 24 of 51 answers: the assistant asked the client for information the company already had.
+- **Each layer solves a different problem.** Short-term memory solves continuity within a conversation (C7 goes from 0/3 to 3/3). Only long-term memory solves what came from another conversation or from the CRM (A2, B3 and B4 go from 0/3 to 3/3).
+- **Consistency over time.** In B3, the WhatsApp preference had already been replaced by email in another conversation (B1). In all 3 runs, full memory used email; the old preference never came back.
+- **No misuse.** No mode leaked another client's data (B5 3/3 everywhere), and the judge found no irrelevant memory use in any of the 204 answers. In A5, with memory, the assistant correctly said it found no record of the training (which belonged to another client); without memory, it treated the training as already agreed and promised to forward it.
+- **Filtered vs. unfiltered.** Quality was practically the same (76% vs. 78%), but unfiltered mode spent **71% more memory tokens** (~286 vs. ~167 per message) and injected 6.3 memories per message instead of 3.6. With only 17 memories in the sample CRM, `gpt-4o-mini` handled the excess well; in the context evaluation, however, unfiltered mode brought noise into 6 messages. The filter pays off in cost and scale: in a real CRM, with hundreds of memories per client, injecting everything doesn't fit in the context.
+
+**Self-critique on** (`npm run experiment -- --modos=completa --autocritica`, results in [`results/autocritica/`](results/autocritica/relatorio.md)):
+- The overall pass rate stayed the same (38/51, 75%). The reviewer rejected and rewrote 15 of the 51 drafts.
+- Where the problem was not using an available memory, the score went up: A1 from 2.3 to 3.3 and A4 from 2.7 to 3.7. In A4, the reviewer pointed out that the answer "doesn't mention the previous ticket about the VPN slowness", and the revised version started acknowledging the recurrence.
+- Still, the revisions were timid: they mentioned "a similar problem" without the ticket number, and didn't pass the checks.
+
+**Compression with the real model** (`npm run experiment -- --modos=curta,completa --cenarios=C --orcamento-curto=500`, results in [`results/compressao/`](results/compressao/relatorio.md)):
+- In the main experiment, compression was never triggered: real answers were shorter than the simulated ones, and the long conversation stayed under 1,200 tokens. So this run repeated scenario C with the budget reduced to 500 tokens.
+- Compression fired at C5, C6 and C7 in all 6 runs. C5 summarized exactly messages C1 and C2, where the details were, and on average each compression shrank short-term memory to 75% of its previous size.
+- **Even so, C7 passed 6 out of 6 times.** In short-term-only mode, which has no long-term memory, the details could only come from the summary. Actual C7 answer in that mode: "Number of participants: 40 drivers · Preferred time: night shift · Location: Canoas warehouse".
+
+**Limitations**
+
+- **A1 and A4: retrieval got it right, generation didn't.** The required memories were in the context: in A1, the Latitude 5450 (M3) and the preference to highlight delivery dates (M5); in A4, ticket CH-4471 (M6, score 0.59). Even so, the model answered generically. The bottleneck here is the generation prompt, not memory.
+- **A3: judge noise.** The answer brought back the 15 Dell Latitude 5450 laptops with the delivery date highlighted, but the judge flagged "incorrect use" with a justification that contradicts the answer key. In 2 of 3 runs the answer also didn't mention "Campinas", so the failure is partly fair.
+- **Judge and answering model are the same** (`gpt-4o-mini`), and the sample is small (17 messages × 3 runs). The numbers show a trend, not statistical precision.
+- **Compression fires on consecutive messages** when the budget is close to the conversation's normal size (C5, C6 and C7 with a 500-token budget). Each trigger costs one summary call.
+
+**Next steps**
+
+- Instruct the generation prompt to explicitly cite related history (ticket number, previous order) when it is in the context. That is what A1 and A4 are missing.
+- Add hysteresis to compression: compress down to, say, 60% of the budget, so it doesn't summarize on every message.
+- Use a stronger judge model (`OPENAI_JUDGE_MODEL`) and add more scenarios.
 
 ## Acceptance criteria and evidence
 
 | Criterion / evidence | How the project meets it | Where to check |
 |---|---|---|
 | Memory is actually used in answers | Relevant memories enter the context on every message; the judge classifies use as correct, missing or incorrect | `--debug`; report ("memory used correctly" column; injected memories per turn) |
-| Answers improve with history | Same scenarios in 4 modes: required facts reaching the model (simulation) and pass rate and score per mode (real experiment) | [Context evaluation results](#results-context-evaluation-simulation-no-api-key): 0% with no memory vs. 80% with full memory; real experiment report |
+| Answers improve with history | Same scenarios in 4 modes, with the real model: pass rate and score per mode | [Real experiment](#results-experiment-with-the-real-model-answers-and-judge): 37% pass rate with no memory vs. 76% with full memory (score 3.14 vs. 4.41); context evaluation: 0% vs. 80% of required facts |
 | No incorrect or irrelevant use | Filtered retrieval with a budget, prompt rules, self-critique, per-client isolation, guardrails | Context evaluation: zero noise in full mode vs. 6 noisy messages unfiltered; turns A5, B2 and B5; `retrieveMemories` and `crmAssistant` tests |
 | System stays consistent over time | `ATUALIZAR` with `supersedes`; history holds only complete exchanges | Turns B1 → B3 (the old preference never comes back into the context); "memory evolution" in the report; `longTermMemory` tests |
 | Understanding of statefulness | 3 memory layers (session, facts, episodes); session resume from SQLite; stateless mode as baseline | [Memory architecture](#memory-architecture); `npm start` → resume conversation |
