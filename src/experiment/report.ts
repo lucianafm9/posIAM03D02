@@ -186,7 +186,9 @@ export function buildReport(results: ExperimentResults): string {
     "# Relatório do experimento: com memória x sem memória",
     "",
     `Gerado em ${results.geradoEm} · modelo \`${results.modelo}\` · juiz \`${results.modeloJuiz}\` · embeddings \`${results.modeloEmbedding}\` · ` +
-      `${results.repeticoes} execução(ões) por modo · autocrítica ${results.autocritica ? "ligada" : "desligada"}.`,
+      `${results.repeticoes} execução(ões) por modo · autocrítica ${results.autocritica ? "ligada" : "desligada"}` +
+      (results.retentativasDeCredito ? ` · ${results.retentativasDeCredito} chamada(s) repetida(s) por erro intermitente de crédito da OpenAI` : "") +
+      ".",
     "",
     "Arquivo gerado por `npm run experiment` (dados completos em `experimento.json`). Cada execução roda os mesmos cenários,",
     "com o mesmo banco inicial (CRM de exemplo) e as mesmas datas simuladas. Um turno é **aprovado** quando passa nas",

@@ -22,6 +22,8 @@ export type TurnRecord = {
   data: string;
   mensagem: string;
   status: string;
+  /** Motivo, quando o turno não foi respondido (erro de API, guardrail). */
+  erros: string[];
   resposta: string | null;
   checks: CheckResult[];
   juiz: JudgeVerdict | null;
@@ -57,6 +59,8 @@ export type ExperimentResults = {
   modeloEmbedding: string;
   autocritica: boolean;
   repeticoes: number;
+  /** Quantas chamadas foram repetidas por 429 credit_balance_exhausted intermitente (ver retryOnCredit). */
+  retentativasDeCredito?: number;
   configuracao: typeof SETTINGS;
   modos: ModeRun[];
 };
@@ -79,6 +83,40 @@ export function isApproved(turn: ScenarioTurn, status: string, checks: CheckResu
   if (checks.some((c) => !c.ok)) return false;
   if (verdict.nota < 4 || verdict.usoIrrelevante || verdict.inconsistente || verdict.usoMemoria === "incorreto") return false;
   return !(turn.memoriaEsperada === "deve_usar" && verdict.usoMemoria === "ausente");
+}
+
+/**
+ * Só no experimento: a OpenAI às vezes devolve 429 credit_balance_exhausted de forma intermitente logo após uma
+ * recarga de créditos. O app trata esse erro como permanente (correto para o usuário final), mas aqui ele
+ * reprovaria turnos por um problema da conta, e não do assistente. Por isso o harness tenta de novo até 4 vezes
+ * e conta quantas vezes isso aconteceu (registrado no relatório).
+ */
+export const creditRetries = { count: 0 };
+
+const isCreditError = (error: unknown) =>
+  typeof error === "object" && error !== null && (error as { code?: unknown }).code === "credit_balance_exhausted";
+
+async function retryOnCredit<T>(fn: () => Promise<T>): Promise<T> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (!isCreditError(error) || attempt >= 5) throw error;
+      creditRetries.count++;
+      await new Promise((resolve) => setTimeout(resolve, 2_000 * attempt));
+    }
+  }
+}
+
+function resilientLlm(llm: LlmClient): LlmClient {
+  return {
+    complete: (messages, options) => retryOnCredit(() => llm.complete(messages, options)),
+    stream: (messages, onToken) => retryOnCredit(() => llm.stream(messages, onToken)),
+  };
+}
+
+function resilientEmbedder(embedder: Embedder): Embedder {
+  return { embed: (text) => retryOnCredit(() => embedder.embed(text)) };
 }
 
 /** Embeddings em cache: o mesmo texto (seed, memórias, mensagens) é vetorizado uma única vez em todos os modos. */
@@ -146,6 +184,7 @@ export async function runOnce(mode: MemoryMode, repeticao: number, deps: RunDeps
           data: clock.toISOString(),
           mensagem: turn.mensagem,
           status: result.status,
+          erros: result.errors,
           resposta: result.answer,
           checks,
           juiz: verdict,
@@ -208,9 +247,9 @@ async function main(): Promise<void> {
   const outDir = arg("saida") ?? "results";
 
   const deps = {
-    llm: createOpenAiClient(apiKey, model),
-    judgeLlm: createOpenAiClient(apiKey, judgeModel),
-    embedder: cached(createOpenAiEmbedder(apiKey)),
+    llm: resilientLlm(createOpenAiClient(apiKey, model)),
+    judgeLlm: resilientLlm(createOpenAiClient(apiKey, judgeModel)),
+    embedder: cached(resilientEmbedder(createOpenAiEmbedder(apiKey))),
     critique,
   };
 
@@ -230,6 +269,7 @@ async function main(): Promise<void> {
     modeloEmbedding: SETTINGS.embeddingModel,
     autocritica: critique,
     repeticoes,
+    retentativasDeCredito: creditRetries.count,
     configuracao: SETTINGS,
     modos: runs,
   };
