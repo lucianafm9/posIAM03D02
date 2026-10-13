@@ -43,9 +43,11 @@ describe("maybeCompress", () => {
       window,
       previousSummary: null,
       maxTokens: 10_000,
+      maxMessages: 20,
       summarize: async () => ((called = true), "x"),
     });
     assert.equal(result.compressed, false);
+    assert.equal(result.trigger, "nenhum");
     assert.equal(called, false);
     assert.equal(result.messages.length, 4);
   });
@@ -57,6 +59,7 @@ describe("maybeCompress", () => {
       window,
       previousSummary: "Resumo antigo.",
       maxTokens: 100,
+      maxMessages: 20,
       summarize: async (messages) => {
         summarized = messages.map((m) => m.content);
         return "Resumo novo.";
@@ -64,11 +67,56 @@ describe("maybeCompress", () => {
     });
 
     assert.equal(result.compressed, true);
+    assert.equal(result.trigger, "tokens");
+    assert.equal(result.summarizedMessages, 6);
     assert.equal(result.summary, "Resumo novo.");
     assert.ok(summarized[0]!.includes("Resumo antigo."), "o resumo anterior entra no novo resumo");
     assert.equal(window.size, 6, "a janela fica só com a metade recente");
     assert.ok(window.getMessages()[0]!.content.startsWith("pergunta 4"), "não separa pergunta da resposta");
     assert.ok(result.tokensAfter < result.tokensBefore);
+  });
+
+  it("comprime quando a janela fica cheia, antes que a janela deslizante descarte mensagens sem resumo", async () => {
+    const window = new ContextWindow(3);
+    for (let i = 1; i <= 3; i++) {
+      window.addUserMessage(`p${i}`);
+      window.addAssistantMessage(`r${i}`);
+    }
+    const result = await maybeCompress({
+      window,
+      previousSummary: null,
+      maxTokens: 10_000,
+      maxMessages: 6,
+      summarize: async (messages) => messages.map((m) => m.content).join(","),
+    });
+
+    assert.equal(result.trigger, "limite_de_mensagens");
+    assert.equal(result.summary, "p1,r1");
+    assert.deepEqual(window.getMessages().map((m) => m.content), ["p2", "r2", "p3", "r3"]);
+  });
+
+  it("não comprime com menos de 4 mensagens, mesmo acima do orçamento", async () => {
+    const window = new ContextWindow(10);
+    window.addUserMessage("x".repeat(3_000));
+    window.addAssistantMessage("y".repeat(3_000));
+    const result = await maybeCompress({ window, previousSummary: null, maxTokens: 100, maxMessages: 20, summarize: async () => "s" });
+    assert.equal(result.compressed, false);
+  });
+
+  it("se o resumo falhar, a janela fica intacta", async () => {
+    const window = fill(6);
+    await assert.rejects(
+      maybeCompress({
+        window,
+        previousSummary: null,
+        maxTokens: 100,
+        maxMessages: 20,
+        summarize: async () => {
+          throw new Error("API fora do ar");
+        },
+      }),
+    );
+    assert.equal(window.size, 12);
   });
 });
 

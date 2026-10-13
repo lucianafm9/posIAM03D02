@@ -175,4 +175,74 @@ export const SCENARIOS: Scenario[] = [
       },
     ],
   },
+  {
+    id: "C",
+    clienteId: "rotasul",
+    titulo: "Logística Rota Sul: conversa longa que aciona a compressão da memória curta",
+    sessoes: [
+      {
+        data: "2026-10-07T18:00:00.000Z",
+        turnos: [
+          {
+            id: "C1",
+            mensagem:
+              "Oi, aqui é a Patrícia. Queremos agendar aquele treinamento de conscientização sobre phishing. Seriam 40 motoristas e precisa ser no turno da noite, depois das 19h.",
+            objetivo: "Abrir o assunto com os detalhes que serão cobrados no fim da conversa (40 pessoas, depois das 19h).",
+            gabarito:
+              "Ideal: retoma o pedido de treinamento registrado após o phishing de abril, confirma 40 motoristas no turno da noite (após 19h) e pede o que falta (local, data). Não inventa preço nem data fechada.",
+            memoriaEsperada: "deve_usar",
+          },
+          {
+            id: "C2",
+            mensagem: "Vocês conseguem fazer presencial no nosso galpão de Canoas? Lá tem um refeitório grande.",
+            objetivo: "Acrescentar o local (galpão de Canoas).",
+            gabarito: "Ideal: diz que vai verificar/encaminhar a viabilidade do treinamento presencial no galpão de Canoas, sem prometer o que não pode garantir.",
+            memoriaEsperada: "nao_aplicavel",
+          },
+          {
+            id: "C3",
+            mensagem: "Qual seria a duração ideal desse treinamento para quem não é da área de tecnologia?",
+            objetivo: "Pergunta de conteúdo (não depende de memória).",
+            gabarito: "Ideal: sugere uma duração razoável para público não técnico, em linguagem simples. Não precisa citar o histórico.",
+            memoriaEsperada: "nao_aplicavel",
+          },
+          {
+            id: "C4",
+            mensagem: "Também queremos fazer uma simulação de phishing depois do treinamento. Como funciona isso na prática?",
+            objetivo: "Pergunta de conteúdo (não depende de memória).",
+            gabarito: "Ideal: explica de forma simples como funciona uma simulação de phishing (e-mails de teste, medição de cliques, reforço). Pode relacionar ao incidente de abril.",
+            memoriaEsperada: "nao_aplicavel",
+          },
+          {
+            id: "C5",
+            mensagem: "Quanto tempo depois do treinamento vocês recomendam fazer a simulação?",
+            objetivo: "Pergunta de conteúdo (não depende de memória).",
+            gabarito: "Ideal: recomenda um intervalo razoável (por exemplo, algumas semanas) e explica o motivo.",
+            memoriaEsperada: "nao_aplicavel",
+          },
+          {
+            id: "C6",
+            mensagem: "E os relatórios da simulação, quem recebe? Eu gostaria de receber pessoalmente, por telefone eu explico para a diretoria.",
+            objetivo: "Conversa longa: a esta altura a memória curta já passou do orçamento de tokens.",
+            gabarito: "Ideal: diz que os relatórios podem ser enviados para a Patrícia e combina a apresentação por telefone, de preferência à tarde (preferência registrada).",
+            memoriaEsperada: "deve_usar",
+          },
+          {
+            id: "C7",
+            mensagem: "Para fechar: me passa um resumo do que combinamos sobre o treinamento: quantas pessoas, horário e local.",
+            objetivo: "Lembrar detalhes do INÍCIO da conversa depois que eles foram comprimidos em resumo.",
+            deve: [
+              { desc: "lembra as 40 pessoas", re: /\b40\b|quarenta/i },
+              { desc: "lembra o horário (noite, após 19h)", re: /19\s*h|19:00|noite|noturno/i },
+              { desc: "lembra o local (Canoas)", re: /canoas/i },
+            ],
+            gabarito:
+              "Ideal: resume corretamente: treinamento de conscientização sobre phishing para 40 motoristas, no turno da noite (após 19h), presencial no galpão de Canoas, seguido de simulação de phishing, " +
+              "com relatórios para a Patrícia. Errado: esquecer ou trocar qualquer um desses dados, ou inventar data e preço.",
+            memoriaEsperada: "deve_usar",
+          },
+        ],
+      },
+    ],
+  },
 ];

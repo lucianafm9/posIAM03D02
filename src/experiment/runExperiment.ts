@@ -1,5 +1,5 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import { CrmAssistant } from "../chat/crmAssistant.ts";
+import { CrmAssistant, type CompressionInfo } from "../chat/crmAssistant.ts";
 import type { CritiqueOutcome } from "../chat/generateAnswer.ts";
 import { SETTINGS } from "../config/settings.ts";
 import { createOpenAiClient, createOpenAiEmbedder, readApiKey } from "../llm/openaiClient.ts";
@@ -15,6 +15,8 @@ import { SCENARIOS, type ScenarioTurn } from "./scenarios.ts";
 export type CheckResult = { tipo: "deve" | "naoDeve"; desc: string; ok: boolean };
 
 export type TurnRecord = {
+  /** Número da execução (1..N): cada modo roda os cenários N vezes, porque o modelo não é determinístico. */
+  repeticao: number;
   cenario: string;
   turno: string;
   data: string;
@@ -30,13 +32,22 @@ export type TurnRecord = {
   memoriasDescartadas: number;
   memoriasGravadas: Array<{ acao: string; id: number; substituiu: number | null; tipo: string; conteudo: string }>;
   autocritica: CritiqueOutcome | null;
+  /** Compressão da memória curta acionada antes desta mensagem (null se não houve). */
+  compressao: CompressionInfo | null;
+};
+
+export type FinalMemory = Record<string, Array<Pick<Memory, "id" | "type" | "content" | "source" | "status" | "supersedes" | "createdAt">>>;
+
+export type ModeExecution = {
+  repeticao: number;
+  turnos: TurnRecord[];
+  /** Estado final da memória dos clientes dos cenários (inclui substituídas), para mostrar a evolução. */
+  memoriaFinal: FinalMemory;
 };
 
 export type ModeRun = {
   modo: MemoryMode;
-  turnos: TurnRecord[];
-  /** Estado final da memória dos clientes dos cenários (inclui substituídas), para mostrar a evolução. */
-  memoriaFinal: Record<string, Array<Pick<Memory, "id" | "type" | "content" | "source" | "status" | "supersedes" | "createdAt">>>;
+  execucoes: ModeExecution[];
 };
 
 export type ExperimentResults = {
@@ -45,6 +56,7 @@ export type ExperimentResults = {
   modeloJuiz: string;
   modeloEmbedding: string;
   autocritica: boolean;
+  repeticoes: number;
   configuracao: typeof SETTINGS;
   modos: ModeRun[];
 };
@@ -83,10 +95,10 @@ function cached(embedder: Embedder): Embedder {
   };
 }
 
-export async function runMode(
-  mode: MemoryMode,
-  deps: { llm: LlmClient; judgeLlm: LlmClient; embedder: Embedder; critique: boolean; log?: (text: string) => void },
-): Promise<ModeRun> {
+export type RunDeps = { llm: LlmClient; judgeLlm: LlmClient; embedder: Embedder; critique: boolean; log?: (text: string) => void };
+
+/** Executa todos os cenários uma vez, num banco novo (mesma carga inicial do CRM). */
+export async function runOnce(mode: MemoryMode, repeticao: number, deps: RunDeps): Promise<ModeExecution> {
   const log = deps.log ?? ((text: string) => process.stdout.write(text));
   const db = openDatabase(":memory:");
   await seedDatabase(db, readSeed(), (text) => deps.embedder.embed(text));
@@ -110,7 +122,7 @@ export async function runMode(
 
       for (const turn of session.turnos) {
         clock = new Date(clock.getTime() + 2 * 60_000);
-        log(`  [${mode}] ${turn.id}... `);
+        log(`  [${mode} #${repeticao}] ${turn.id}... `);
         const result = await assistant.handle(turn.mensagem);
         const answer = result.answer ?? "";
         const checks = evaluateChecks(turn, answer);
@@ -128,6 +140,7 @@ export async function runMode(
         log(`${aprovado ? "aprovado" : "reprovado"}${verdict ? ` (nota ${verdict.nota})` : ""}\n`);
 
         turnos.push({
+          repeticao,
           cenario: scenario.id,
           turno: turn.id,
           data: clock.toISOString(),
@@ -155,6 +168,7 @@ export async function runMode(
             conteudo: item.memory.content,
           })),
           autocritica: result.critique,
+          compressao: result.compression,
         });
       }
 
@@ -163,14 +177,20 @@ export async function runMode(
     }
   }
 
-  const memoriaFinal: ModeRun["memoriaFinal"] = {};
+  const memoriaFinal: FinalMemory = {};
   for (const clientId of new Set(SCENARIOS.map((s) => s.clienteId))) {
     memoriaFinal[clientId] = assistant.memories
       .listAll(clientId)
       .map(({ id, type, content, source, status, supersedes, createdAt }) => ({ id, type, content, source, status, supersedes, createdAt }));
   }
   db.close();
-  return { modo: mode, turnos, memoriaFinal };
+  return { repeticao, turnos, memoriaFinal };
+}
+
+export async function runMode(mode: MemoryMode, repeticoes: number, deps: RunDeps): Promise<ModeRun> {
+  const execucoes: ModeExecution[] = [];
+  for (let repeticao = 1; repeticao <= repeticoes; repeticao++) execucoes.push(await runOnce(mode, repeticao, deps));
+  return { modo: mode, execucoes };
 }
 
 async function main(): Promise<void> {
@@ -184,6 +204,7 @@ async function main(): Promise<void> {
   const judgeModel = process.env.OPENAI_JUDGE_MODEL || model;
   const modes = (arg("modos")?.split(",") ?? [...MEMORY_MODES]) as MemoryMode[];
   const critique = process.argv.includes("--autocritica");
+  const repeticoes = Math.max(1, Number.parseInt(arg("repeticoes") ?? "3", 10) || 3);
   const outDir = arg("saida") ?? "results";
 
   const deps = {
@@ -193,11 +214,13 @@ async function main(): Promise<void> {
     critique,
   };
 
-  console.log(`Experimento: modelo=${model}, juiz=${judgeModel}, modos=${modes.join(", ")}, autocrítica=${critique ? "ligada" : "desligada"}`);
+  console.log(
+    `Experimento: modelo=${model}, juiz=${judgeModel}, modos=${modes.join(", ")}, repetições=${repeticoes}, autocrítica=${critique ? "ligada" : "desligada"}`,
+  );
   const runs: ModeRun[] = [];
   for (const mode of modes) {
     console.log(`\nModo ${mode}:`);
-    runs.push(await runMode(mode, deps));
+    runs.push(await runMode(mode, repeticoes, deps));
   }
 
   const results: ExperimentResults = {
@@ -206,6 +229,7 @@ async function main(): Promise<void> {
     modeloJuiz: judgeModel,
     modeloEmbedding: SETTINGS.embeddingModel,
     autocritica: critique,
+    repeticoes,
     configuracao: SETTINGS,
     modos: runs,
   };

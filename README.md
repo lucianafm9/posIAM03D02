@@ -21,6 +21,7 @@ incorpora os conceitos de memória das aulas (`ContextWindow`, `messageRepositor
 - [Arquitetura da memória](#arquitetura-da-memória)
 - [Estrutura de armazenamento](#estrutura-de-armazenamento)
 - [Fluxo de uma mensagem](#fluxo-de-uma-mensagem)
+- [Estratégia de compressão da memória curta](#estratégia-de-compressão-da-memória-curta)
 - [Lógica de recuperação](#lógica-de-recuperação)
 - [Como evitar uso excessivo ou irrelevante](#como-evitar-uso-excessivo-ou-irrelevante)
 - [Consistência ao longo do tempo](#consistência-ao-longo-do-tempo)
@@ -49,7 +50,7 @@ npm start              # abre o atendimento
 | `npm run seed` | Recria o banco local com o CRM de exemplo (apaga conversas e memórias) | sim (embeddings) |
 | `npm run experiment` | Executa a comparação entre os 4 modos e gera `results/relatorio.md` | sim |
 | `npm run demo` | Demonstra o tratamento de erros e a autocrítica com modelo simulado | **não** |
-| `npm test` | 35 testes automatizados (modelo e embeddings simulados) | **não** |
+| `npm test` | 39 testes automatizados (modelo e embeddings simulados) | **não** |
 | `npm run typecheck` | Checagem de tipos | não |
 
 Variáveis do `.env`: `OPENAI_API_KEY` (obrigatória), `OPENAI_MODEL` (opcional, padrão `gpt-4o-mini`) e
@@ -66,7 +67,7 @@ A memória tem três níveis, cada um com um papel diferente no contexto enviado
 
 | Nível | O que guarda | Onde vive | Como entra no contexto |
 |---|---|---|---|
-| **Curto prazo** (sessão) | A conversa do atendimento atual | `ContextWindow` + tabela `messages` | Mensagens recentes literais; a parte antiga vira resumo quando passa de ~1.200 tokens (`maybeCompress`) |
+| **Curto prazo** (sessão) | A conversa do atendimento atual | `ContextWindow` + tabela `messages` | Mensagens recentes literais; a parte antiga vira resumo quando passa de ~1.200 tokens ou de 20 mensagens ([detalhes](#estratégia-de-compressão-da-memória-curta)) |
 | **Longo prazo** (fatos) | Pedidos, preferências, problemas e relacionamento do cliente | Tabela `memories` (com embedding) | Só as memórias **relevantes para a mensagem atual** (`retrieveMemories`), dentro de um orçamento de tokens |
 | **Episódica** (atendimentos) | Resumo de cada atendimento encerrado | Tabela `sessions.summary` | Resumos dos 2 últimos atendimentos do cliente |
 
@@ -114,7 +115,7 @@ Implementado em [`src/chat/crmAssistant.ts`](src/chat/crmAssistant.ts):
 
 1. **Guardrail de entrada** ([`validateInput`](src/guardrails/validateInput.ts)): vazio, tamanho, dado sensível (CPF, cartão, valor de senha, token) e tentativa de manipulação. Reprovada, a mensagem não chega ao modelo e não é gravada.
 2. **Memória de longo prazo**: recupera as memórias relevantes do cliente atual (detalhes abaixo) e os resumos dos últimos atendimentos.
-3. **Memória de curto prazo**: se a janela passar do orçamento, a metade antiga é resumida (`maybeCompress` + `summarizeHistory`) e o resumo é salvo na sessão.
+3. **Memória de curto prazo**: se a janela passar do orçamento de tokens ou ficar cheia, a metade antiga é resumida (`maybeCompress` + `summarizeHistory`) e o resumo é salvo na sessão ([detalhes](#estratégia-de-compressão-da-memória-curta)).
 4. **Contexto costurado** ([`stitchContext`](src/memory/stitchContext.ts)): `<memoria_cliente>` → `<resumo_atendimento_atual>` → mensagens recentes → mensagem atual. O prompt de sistema ([`buildPrompt.ts`](src/chat/buildPrompt.ts)) segue a ordem PAPEL, INSTRUÇÕES (com as regras de uso da memória), DADOS e FORMATO.
 5. **Geração** ([`generateAnswer`](src/chat/generateAnswer.ts)): rascunho em streaming, autocrítica e, se necessário, versão revisada.
 6. **Guardrail de saída** ([`validateOutput`](src/guardrails/validateOutput.ts)): resposta vazia, que cite outro cliente, com dado sensível ou com promessa indevida ("garanto que", "desconto aprovado"). Reprovada, não entra no histórico nem vira memória.
@@ -122,6 +123,99 @@ Implementado em [`src/chat/crmAssistant.ts`](src/chat/crmAssistant.ts):
 8. **Extração de memória** ([`extractMemories`](src/memory/extractMemories.ts)): o modelo devolve operações `ADICIONAR`/`ATUALIZAR` em JSON. Cada uma passa por [`validateMemory`](src/guardrails/validateMemory.ts) antes de ser gravada, e o usuário vê o que foi registrado (`[Memória registrada] M18 (pedido): ...`).
 
 Ao encerrar (`sair`), o atendimento é resumido e o resumo vira memória episódica para os próximos contatos.
+
+## Estratégia de compressão da memória curta
+
+A conversa do atendimento atual é a parte da memória que cresce mais rápido: cada interação acrescenta a pergunta e a
+resposta inteiras. Sem controle, um atendimento longo encareceria cada chamada, ficaria mais lento e, no limite,
+estouraria a janela de contexto do modelo. A compressão ([`src/memory/maybeCompress.ts`](src/memory/maybeCompress.ts))
+mantém essa parte dentro de um orçamento fixo **sem perder o que foi combinado no início da conversa**.
+
+### Quando a compressão é aplicada
+
+A verificação acontece **antes de cada nova mensagem** (passo 3 do fluxo), nos modos que têm memória curta. Há dois gatilhos:
+
+| Gatilho | Condição | Por que existe |
+|---|---|---|
+| `tokens` | Mensagens da janela + resumo anterior passam de **1.200 tokens** estimados (`estimateTokens`, ~3 caracteres por token) | É o gatilho principal: limita o custo e o tamanho do contexto quando as respostas são longas |
+| `limite_de_mensagens` | A janela chegou a **20 mensagens** (10 interações), mesmo abaixo de 1.200 tokens | Evita perda silenciosa: sem ele, a janela deslizante descartaria as mensagens mais antigas **sem resumo** quando a conversa tem mensagens curtas |
+
+Com menos de 4 mensagens (2 interações), não há compressão: não faria sentido resumir uma única troca.
+
+### Como a compressão funciona
+
+```mermaid
+flowchart LR
+  A["Janela antes<br/>p1 r1 p2 r2 p3 r3 p4 r4 p5 r5<br/>+ resumo anterior"] --> B{"Mais de 1.200 tokens<br/>ou 20 mensagens?"}
+  B -->|não| K[Segue sem mudança]
+  B -->|sim| C["Metade antiga, corte par:<br/>p1 r1 p2 r2"]
+  C --> D["summarizeHistory<br/>(resumo anterior + metade antiga)"]
+  D --> E["Novo resumo acumulado<br/>salvo em sessions.compressed_summary"]
+  A --> F["Metade recente, literal:<br/>p3 r3 p4 r4 p5 r5"]
+  E --> G["Contexto: resumo + metade recente + nova mensagem"]
+  F --> G
+```
+
+1. **Corte em número par**: a metade antiga tem `floor(mensagens / 4) × 2` mensagens, então uma pergunta nunca fica separada da sua resposta.
+2. **Resumo acumulativo**: a metade antiga é resumida **junto com o resumo anterior**. O resultado substitui o anterior, então nenhuma parte da conversa é resumida duas vezes e o resumo não cresce sem limite (o prompt pede até 80 palavras).
+3. **Foco do resumo** ([`SUMMARY_PROMPT`](src/memory/summarizeHistory.ts)): o que o cliente pediu ou relatou, decisões e compromissos com números e prazos, e o que ficou pendente. Saudações ficam de fora e nada pode ser inventado.
+4. **Janela atualizada**: a metade antiga sai da janela; a metade recente continua literal.
+5. **Persistência**: o resumo vai para `sessions.compressed_summary`, e `sessions.compressed_upto` guarda quantas mensagens do atendimento ele já cobre.
+
+No contexto enviado ao modelo, o resumo entra como `<resumo_atendimento_atual>`, depois da memória de longo prazo e antes das mensagens recentes ([`stitchContext`](src/memory/stitchContext.ts)).
+
+### Exemplo numérico
+
+Valores ilustrativos, calculados com as regras acima para respostas de ~250 tokens e perguntas de ~30 tokens:
+
+| Antes da mensagem | Memória curta | Decisão |
+|---|---|---|
+| 5ª | 8 mensagens ≈ 1.120 tokens | Abaixo do orçamento: nada muda |
+| 6ª | 10 mensagens ≈ 1.400 tokens | **Comprime** (`tokens`): as 4 mensagens das interações 1 e 2 viram um resumo de ~170 tokens; ficam 6 mensagens literais ≈ 840 tokens. Total ≈ 1.010 tokens |
+| 7ª | resumo + 8 mensagens ≈ 1.290 tokens | **Comprime de novo**: resumo anterior + interações 3 e 4 viram um novo resumo de ~170 tokens; ficam 4 mensagens ≈ 560 tokens. Total ≈ 730 tokens |
+
+Daí em diante, a memória curta fica abaixo de ~1.200 tokens, não importa o tamanho do atendimento. O custo é uma
+chamada extra de resumo de tempos em tempos. Com `--debug`, cada compressão aparece assim:
+
+```
+[Memória curta comprimida (passou do orçamento de tokens): 4 mensagens resumidas, ~1400 -> ~1010 tokens]
+```
+
+### Retomada de atendimento
+
+Ao retomar um atendimento, o resumo salvo é restaurado e só as mensagens **posteriores** a `compressed_upto` voltam
+para a janela. A parte antiga não é resumida de novo, e nada é contado duas vezes.
+
+### Se o resumo falhar
+
+O resumo passa pelas mesmas retentativas das outras chamadas. Se ainda assim falhar, a janela fica intacta, o usuário
+vê `[Compressão indisponível (...). Seguindo só com a janela deslizante.]` e o atendimento continua. Na mensagem
+seguinte, a compressão é tentada de novo.
+
+### Relação com as outras memórias
+
+| Mecanismo | Quando roda | O que preserva |
+|---|---|---|
+| **Compressão** (`maybeCompress`) | Durante o atendimento, quando passa do orçamento | O fio da conversa atual (o que foi combinado, o que está pendente) |
+| **Extração** (`extractMemories`) | Depois de cada resposta | Fatos duráveis do cliente, para atendimentos futuros |
+| **Resumo episódico** (`endSession`) | No encerramento do atendimento | Um resumo do atendimento inteiro, para os próximos contatos |
+
+Por isso a compressão pode ser agressiva: os fatos importantes já foram extraídos para a memória de longo prazo a cada
+mensagem. O resumo de compressão serve para manter a continuidade dentro do atendimento.
+
+### Parâmetros e verificação
+
+| Parâmetro ([`settings.ts`](src/config/settings.ts)) | Valor | Efeito |
+|---|---|---|
+| `shortTerm.maxTokens` | 1.200 | Orçamento da memória curta (gatilho `tokens`) |
+| `shortTerm.maxTurns` | 10 | Tamanho da janela; 20 mensagens é o gatilho `limite_de_mensagens` |
+| `charsPerToken` | 3 | Estimativa usada por `estimateTokens` |
+
+Os testes em [`tests/shortTermMemory.test.ts`](tests/shortTermMemory.test.ts) e
+[`tests/crmAssistant.test.ts`](tests/crmAssistant.test.ts) cobrem os dois gatilhos, o corte par, o resumo
+acumulativo, a falha no resumo e uma conversa longa completa. Nesse último teste, o fato dito na primeira mensagem
+continua no contexto pelo resumo, e a retomada restaura só as mensagens não resumidas. No experimento, o
+[cenário C](#comparação-com-memória-x-sem-memória) mede a compressão com o modelo real.
 
 ## Lógica de recuperação
 
@@ -278,7 +372,8 @@ isolar o efeito da memória (ligue com `npm run experiment -- --autocritica`).
 
 ## Comparação: com memória x sem memória
 
-`npm run experiment` executa os mesmos cenários em 4 modos, cada um com o mesmo banco inicial e as mesmas datas simuladas:
+`npm run experiment` executa os mesmos cenários em 4 modos, cada um com o mesmo banco inicial e as mesmas datas simuladas.
+Como o modelo não é determinístico, cada modo roda **3 vezes** por padrão (`--repeticoes=N`), e o relatório mostra o total e o resultado de cada execução:
 
 | Modo | Memória curta (sessão) | Memória de longo prazo | Resumos de atendimentos |
 |---|---|---|---|
@@ -287,7 +382,7 @@ isolar o efeito da memória (ligue com `npm run experiment -- --autocritica`).
 | `completa` (proposta) | sim | relevantes (filtradas) | sim |
 | `sem_filtro` | sim | **todas** | sim |
 
-Os cenários ([`src/experiment/scenarios.ts`](src/experiment/scenarios.ts)) têm 10 interações em 4 atendimentos de 2 clientes, cada uma com um objetivo:
+Os cenários ([`src/experiment/scenarios.ts`](src/experiment/scenarios.ts)) têm 17 interações em 5 atendimentos de 3 clientes, cada uma com um objetivo:
 
 | Turno | Atendimento | O que avalia |
 |---|---|---|
@@ -300,11 +395,14 @@ Os cenários ([`src/experiment/scenarios.ts`](src/experiment/scenarios.ts)) têm
 | B3 | Bem Viver, 12/10 (nova sessão) | Usar a preferência **atualizada** e a data de renovação |
 | B4 | Bem Viver, 12/10 | Recuperar o problema anterior certo (cobrança duplicada e estorno) |
 | B5 | Bem Viver, 12/10 | Isolamento: pedido de dados de outro cliente |
+| C1 a C6 | Rota Sul, 07/10 (conversa longa) | Um atendimento longo (treinamento de phishing) que passa do orçamento da memória curta e aciona a compressão |
+| C7 | Rota Sul, 07/10 | Lembrar os detalhes do início (40 pessoas, depois das 19h, galpão de Canoas) depois que eles foram comprimidos em resumo |
 
 Cada resposta é avaliada por **checagens objetivas** (padrões que devem ou não aparecer) e por um **LLM juiz** com gabarito
 (nota de 1 a 5, uso correto, ausente ou incorreto da memória, uso irrelevante, inconsistência). O relatório gerado
-([`results/relatorio.md`](results/relatorio.md)) traz o resumo por modo, o resultado por interação, os tokens de
-contexto, a evolução da memória (memórias criadas e substituídas) e as transcrições completas de cada modo, lado a lado.
+([`results/relatorio.md`](results/relatorio.md)) traz o resumo por modo, o resultado por interação (aprovações por execução e nota média), os tokens de
+contexto, a seção **Compressão da memória curta** (tokens de contexto a cada mensagem do cenário C, onde a compressão aconteceu e quanto reduziu),
+os turnos que variaram entre as execuções, a evolução da memória (memórias criadas e substituídas) e as transcrições completas de cada modo, lado a lado.
 Os dados brutos ficam em [`results/experimento.json`](results/experimento.json). Os dois arquivos são gerados ao
 executar o experimento com uma chave válida.
 
@@ -317,7 +415,7 @@ executar o experimento com uma chave válida.
 | Não há uso incorreto ou irrelevante | Recuperação filtrada e com orçamento, regras no prompt, autocrítica, isolamento por cliente, guardrails | Turnos A5, B2 e B5; modo `sem_filtro` como contraponto; testes `retrieveMemories` e `crmAssistant` |
 | Sistema mantém consistência ao longo do tempo | `ATUALIZAR` com `supersedes`; histórico só com interações íntegras | Turnos B1 → B3; "Evolução da memória" no relatório; testes `longTermMemory` |
 | Entendimento de statefulness | 3 níveis de memória (sessão, fatos, episódios); retomada de sessão a partir do SQLite; modo stateless como linha de base | Seção [Arquitetura da memória](#arquitetura-da-memória); `npm start` → retomar atendimento |
-| Uso eficiente de contexto | Orçamento de memória (~450 tokens), compressão da sessão (~1.200 tokens), tokens medidos por turno | Relatório, "Uso eficiente de contexto" (`completa` x `sem_filtro`) |
+| Uso eficiente de contexto | Orçamento de memória (~450 tokens), compressão da sessão (~1.200 tokens ou 20 mensagens), tokens medidos por turno | Relatório, "Uso eficiente de contexto" (`completa` x `sem_filtro`) e "Compressão da memória curta" (cenário C); seção [Estratégia de compressão](#estratégia-de-compressão-da-memória-curta) |
 | Melhoria real na experiência | O cliente não repete informações, preferências são respeitadas e problemas recorrentes são reconhecidos | Transcrições do relatório |
 
 ## Conceitos da disciplina no código
@@ -328,7 +426,7 @@ executar o experimento com uma chave válida.
 | `messageRepository.ts` (persistência SQLite, restaurar a sessão) | [`src/memory/sessionRepository.ts`](src/memory/sessionRepository.ts) (mensagens por atendimento, gravação em transação, ordem por `id`) e [`memoryRepository.ts`](src/memory/memoryRepository.ts) |
 | `summarizeHistory.ts` | [`src/memory/summarizeHistory.ts`](src/memory/summarizeHistory.ts): compressão e resumo episódico |
 | `estimateTokens.ts` | [`src/memory/estimateTokens.ts`](src/memory/estimateTokens.ts): orçamento da janela, do bloco de memória e medição do contexto |
-| `maybeCompress.ts` | [`src/memory/maybeCompress.ts`](src/memory/maybeCompress.ts): resumo acumulativo da metade antiga, sem cortar pergunta e resposta |
+| `maybeCompress.ts` | [`src/memory/maybeCompress.ts`](src/memory/maybeCompress.ts): resumo acumulativo da metade antiga, sem cortar pergunta e resposta, acionado por tokens ou por janela cheia |
 | `stitchContext.ts` | [`src/memory/stitchContext.ts`](src/memory/stitchContext.ts): memória do cliente + resumo da sessão + mensagens recentes |
 | `chatbot.ts` (memória em chatbot) | [`src/chat/crmAssistant.ts`](src/chat/crmAssistant.ts) + [`src/cli/session.ts`](src/cli/session.ts) |
 | `validateInput.ts` / `validateOutput.ts` | [`src/guardrails/`](src/guardrails/) (+ `validateMemory.ts` para o que é gravado) |

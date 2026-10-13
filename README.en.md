@@ -24,6 +24,7 @@ the memory concepts from the course (`ContextWindow`, `messageRepository`, `summ
 - [Memory architecture](#memory-architecture)
 - [Storage structure](#storage-structure)
 - [Lifecycle of a message](#lifecycle-of-a-message)
+- [Short-term memory compression strategy](#short-term-memory-compression-strategy)
 - [Retrieval logic](#retrieval-logic)
 - [Avoiding excessive or irrelevant memory use](#avoiding-excessive-or-irrelevant-memory-use)
 - [Consistency over time](#consistency-over-time)
@@ -52,7 +53,7 @@ npm start              # opens a client conversation
 | `npm run seed` | Recreates the local database with the sample CRM (erases conversations and memories) | yes (embeddings) |
 | `npm run experiment` | Runs the comparison across the 4 modes and writes `results/relatorio.md` | yes |
 | `npm run demo` | Demonstrates error handling and self-critique with a simulated model | **no** |
-| `npm test` | 35 automated tests (simulated model and embeddings) | **no** |
+| `npm test` | 39 automated tests (simulated model and embeddings) | **no** |
 | `npm run typecheck` | Type checking | no |
 
 `.env` variables: `OPENAI_API_KEY` (required), `OPENAI_MODEL` (optional, default `gpt-4o-mini`) and
@@ -69,7 +70,7 @@ Memory has three layers, each with a different role in the context sent to the m
 
 | Layer | What it holds | Where it lives | How it enters the context |
 |---|---|---|---|
-| **Short-term** (session) | The current conversation | `ContextWindow` + `messages` table | Recent messages verbatim; the older part becomes a summary above ~1,200 tokens (`maybeCompress`) |
+| **Short-term** (session) | The current conversation | `ContextWindow` + `messages` table | Recent messages verbatim; the older part becomes a summary above ~1,200 tokens or 20 messages ([details](#short-term-memory-compression-strategy)) |
 | **Long-term** (facts) | Client orders, preferences, problems and relationship | `memories` table (with embeddings) | Only the memories **relevant to the current message** (`retrieveMemories`), within a token budget |
 | **Episodic** (conversations) | Summary of each finished conversation | `sessions.summary` column | Summaries of the client's last 2 conversations |
 
@@ -117,7 +118,7 @@ Implemented in [`src/chat/crmAssistant.ts`](src/chat/crmAssistant.ts):
 
 1. **Input guardrail** ([`validateInput`](src/guardrails/validateInput.ts)): empty, too long, sensitive data (CPF, card number, password value, token) and manipulation attempts. A rejected message never reaches the model and is never saved.
 2. **Long-term memory**: retrieves the current client's relevant memories (details below) and the summaries of the latest conversations.
-3. **Short-term memory**: if the window exceeds its budget, the older half is summarized (`maybeCompress` + `summarizeHistory`) and the summary is saved on the session.
+3. **Short-term memory**: if the window exceeds its token budget or is full, the older half is summarized (`maybeCompress` + `summarizeHistory`) and the summary is saved on the session ([details](#short-term-memory-compression-strategy)).
 4. **Stitched context** ([`stitchContext`](src/memory/stitchContext.ts)): `<memoria_cliente>` → `<resumo_atendimento_atual>` → recent messages → current message. The system prompt ([`buildPrompt.ts`](src/chat/buildPrompt.ts)) follows the order ROLE, INSTRUCTIONS (including the memory-usage rules), DATA and OUTPUT FORMAT.
 5. **Generation** ([`generateAnswer`](src/chat/generateAnswer.ts)): streamed draft, self-critique and, if needed, a revised version.
 6. **Output guardrail** ([`validateOutput`](src/guardrails/validateOutput.ts)): empty answer, mentions of another client, sensitive data or unauthorized promises ("I guarantee", "discount approved"). A rejected answer is not saved to history and does not become memory.
@@ -125,6 +126,99 @@ Implemented in [`src/chat/crmAssistant.ts`](src/chat/crmAssistant.ts):
 8. **Memory extraction** ([`extractMemories`](src/memory/extractMemories.ts)): the model returns `ADICIONAR` (add) / `ATUALIZAR` (update) operations as JSON. Each one goes through [`validateMemory`](src/guardrails/validateMemory.ts) before being saved, and the user sees what was recorded (`[Memória registrada] M18 (pedido): ...`).
 
 When the conversation ends (`sair`), it is summarized and the summary becomes episodic memory for future contacts.
+
+## Short-term memory compression strategy
+
+The current conversation is the part of memory that grows fastest: every exchange adds the full question and answer.
+Left unchecked, a long conversation would make every call more expensive and slower and, eventually, overflow the
+model's context window. Compression ([`src/memory/maybeCompress.ts`](src/memory/maybeCompress.ts)) keeps this part
+within a fixed budget **without losing what was agreed at the start of the conversation**.
+
+### When compression is applied
+
+The check runs **before every new message** (step 3 of the lifecycle), in the modes that have short-term memory. There are two triggers:
+
+| Trigger | Condition | Why it exists |
+|---|---|---|
+| `tokens` | Window messages + previous summary exceed **1,200 estimated tokens** (`estimateTokens`, ~3 characters per token) | The main trigger: caps cost and context size when answers are long |
+| `limite_de_mensagens` (message limit) | The window reached **20 messages** (10 exchanges), even below 1,200 tokens | Prevents silent loss: without it, the sliding window would drop the oldest messages **without summarizing them** when messages are short |
+
+With fewer than 4 messages (2 exchanges), there is no compression: summarizing a single exchange makes no sense.
+
+### How compression works
+
+```mermaid
+flowchart LR
+  A["Window before<br/>q1 a1 q2 a2 q3 a3 q4 a4 q5 a5<br/>+ previous summary"] --> B{"Over 1,200 tokens<br/>or 20 messages?"}
+  B -->|no| K[No change]
+  B -->|yes| C["Older half, even cut:<br/>q1 a1 q2 a2"]
+  C --> D["summarizeHistory<br/>(previous summary + older half)"]
+  D --> E["New cumulative summary<br/>saved in sessions.compressed_summary"]
+  A --> F["Recent half, verbatim:<br/>q3 a3 q4 a4 q5 a5"]
+  E --> G["Context: summary + recent half + new message"]
+  F --> G
+```
+
+1. **Even cut**: the older half has `floor(messages / 4) × 2` messages, so a question is never separated from its answer.
+2. **Cumulative summary**: the older half is summarized **together with the previous summary**. The result replaces the previous one, so no part of the conversation is summarized twice and the summary doesn't grow without bound (the prompt asks for up to 80 words).
+3. **Summary focus** ([`SUMMARY_PROMPT`](src/memory/summarizeHistory.ts)): what the client asked or reported, decisions and commitments with numbers and dates, and what is still pending. Greetings are left out and nothing can be invented.
+4. **Window update**: the older half leaves the window; the recent half stays verbatim.
+5. **Persistence**: the summary goes to `sessions.compressed_summary`, and `sessions.compressed_upto` stores how many of the conversation's messages it already covers.
+
+In the context sent to the model, the summary appears as `<resumo_atendimento_atual>`, after long-term memory and before the recent messages ([`stitchContext`](src/memory/stitchContext.ts)).
+
+### Worked example
+
+Illustrative values, computed with the rules above for ~250-token answers and ~30-token questions:
+
+| Before message | Short-term memory | Decision |
+|---|---|---|
+| 5th | 8 messages ≈ 1,120 tokens | Under budget: no change |
+| 6th | 10 messages ≈ 1,400 tokens | **Compress** (`tokens`): the 4 messages of exchanges 1 and 2 become a ~170-token summary; 6 messages stay verbatim ≈ 840 tokens. Total ≈ 1,010 tokens |
+| 7th | summary + 8 messages ≈ 1,290 tokens | **Compress again**: previous summary + exchanges 3 and 4 become a new ~170-token summary; 4 messages stay ≈ 560 tokens. Total ≈ 730 tokens |
+
+From then on, short-term memory stays under ~1,200 tokens regardless of how long the conversation gets. The cost is an
+extra summary call every now and then. With `--debug`, each compression is shown like this:
+
+```
+[Memória curta comprimida (passou do orçamento de tokens): 4 mensagens resumidas, ~1400 -> ~1010 tokens]
+```
+
+### Resuming a conversation
+
+When a conversation is resumed, the saved summary is restored and only the messages **after** `compressed_upto` go back
+into the window. The older part is not summarized again, and nothing is counted twice.
+
+### If summarization fails
+
+The summary call uses the same retries as every other call. If it still fails, the window stays intact, the user sees
+`[Compressão indisponível (...). Seguindo só com a janela deslizante.]` ("compression unavailable, continuing with the
+sliding window only") and the conversation goes on. Compression is attempted again on the next message.
+
+### How it relates to the other memories
+
+| Mechanism | When it runs | What it preserves |
+|---|---|---|
+| **Compression** (`maybeCompress`) | During the conversation, when over budget | The thread of the current conversation (what was agreed, what is pending) |
+| **Extraction** (`extractMemories`) | After every answer | Durable client facts, for future conversations |
+| **Episodic summary** (`endSession`) | When the conversation ends | A summary of the whole conversation, for future contacts |
+
+That is why compression can be aggressive: the important facts have already been extracted to long-term memory after
+every message. The compression summary exists to keep continuity within the conversation.
+
+### Parameters and verification
+
+| Parameter ([`settings.ts`](src/config/settings.ts)) | Value | Effect |
+|---|---|---|
+| `shortTerm.maxTokens` | 1,200 | Short-term memory budget (`tokens` trigger) |
+| `shortTerm.maxTurns` | 10 | Window size; 20 messages is the message-limit trigger |
+| `charsPerToken` | 3 | Estimate used by `estimateTokens` |
+
+The tests in [`tests/shortTermMemory.test.ts`](tests/shortTermMemory.test.ts) and
+[`tests/crmAssistant.test.ts`](tests/crmAssistant.test.ts) cover both triggers, the even cut, the cumulative summary,
+summarization failure and a full long conversation. In that last test, a fact stated in the first message stays in
+the context through the summary, and resuming restores only the messages that were not summarized. In the experiment,
+[scenario C](#comparison-with-memory-vs-without-memory) measures compression with the real model.
 
 ## Retrieval logic
 
@@ -284,7 +378,8 @@ isolate the effect of memory (turn it on with `npm run experiment -- --autocriti
 
 ## Comparison: with memory vs. without memory
 
-`npm run experiment` runs the same scenarios in 4 modes, each with the same initial database and the same simulated dates:
+`npm run experiment` runs the same scenarios in 4 modes, each with the same initial database and the same simulated dates.
+Because the model is not deterministic, each mode runs **3 times** by default (`--repeticoes=N`), and the report shows the total and the result of each run:
 
 | Mode | Short-term (session) | Long-term | Conversation summaries |
 |---|---|---|---|
@@ -293,7 +388,7 @@ isolate the effect of memory (turn it on with `npm run experiment -- --autocriti
 | `completa` (proposed) | yes | relevant only (filtered) | yes |
 | `sem_filtro` (unfiltered) | yes | **all** | yes |
 
-The scenarios ([`src/experiment/scenarios.ts`](src/experiment/scenarios.ts)) have 10 exchanges across 4 conversations with 2 clients, each with a goal:
+The scenarios ([`src/experiment/scenarios.ts`](src/experiment/scenarios.ts)) have 17 exchanges across 5 conversations with 3 clients, each with a goal:
 
 | Turn | Conversation | What it tests |
 |---|---|---|
@@ -306,11 +401,14 @@ The scenarios ([`src/experiment/scenarios.ts`](src/experiment/scenarios.ts)) hav
 | B3 | Bem Viver, Oct 12 (new session) | Use the **updated** preference and the renewal date |
 | B4 | Bem Viver, Oct 12 | Recall the right past problem (duplicate charge and refund) |
 | B5 | Bem Viver, Oct 12 | Isolation: request for another client's data |
+| C1 to C6 | Rota Sul, Oct 7 (long conversation) | A long conversation (phishing training) that exceeds the short-term budget and triggers compression |
+| C7 | Rota Sul, Oct 7 | Recall details from the start (40 people, after 7 pm, Canoas warehouse) after they were compressed into a summary |
 
 Each answer is scored by **objective checks** (patterns that must or must not appear) and by an **LLM judge** with an
 answer key (score 1 to 5, correct/missing/incorrect memory use, irrelevant use, inconsistency). The generated report
-([`results/relatorio.md`](results/relatorio.md)) includes the summary per mode, the result per exchange, context
-tokens, memory evolution (memories created and replaced) and full side-by-side transcripts for every mode. Raw data
+([`results/relatorio.md`](results/relatorio.md)) includes the summary per mode, the result per exchange (passes per run and mean score), context
+tokens, a **short-term memory compression** section (context tokens on every message of scenario C, where compression happened and how much it saved),
+the turns that varied across runs, memory evolution (memories created and replaced) and full side-by-side transcripts for every mode. Raw data
 is in [`results/experimento.json`](results/experimento.json). Both files are generated when the experiment runs with
 a valid key.
 
@@ -323,7 +421,7 @@ a valid key.
 | No incorrect or irrelevant use | Filtered retrieval with a budget, prompt rules, self-critique, per-client isolation, guardrails | Turns A5, B2 and B5; `sem_filtro` mode as a counterpoint; `retrieveMemories` and `crmAssistant` tests |
 | System stays consistent over time | `ATUALIZAR` with `supersedes`; history holds only complete exchanges | Turns B1 → B3; "memory evolution" in the report; `longTermMemory` tests |
 | Understanding of statefulness | 3 memory layers (session, facts, episodes); session resume from SQLite; stateless mode as baseline | [Memory architecture](#memory-architecture); `npm start` → resume conversation |
-| Efficient use of context | Memory budget (~450 tokens), session compression (~1,200 tokens), tokens measured per turn | Report, "Uso eficiente de contexto" (`completa` vs. `sem_filtro`) |
+| Efficient use of context | Memory budget (~450 tokens), session compression (~1,200 tokens or 20 messages), tokens measured per turn | Report, "Uso eficiente de contexto" (`completa` vs. `sem_filtro`) and "Compressão da memória curta" (scenario C); [compression strategy](#short-term-memory-compression-strategy) section |
 | Real improvement in experience | The client doesn't repeat information, preferences are respected, recurring problems are recognized | Report transcripts |
 
 ## Course concepts in the code
@@ -334,7 +432,7 @@ a valid key.
 | `messageRepository.ts` (SQLite persistence, session restore) | [`src/memory/sessionRepository.ts`](src/memory/sessionRepository.ts) (messages per conversation, transactional writes, ordered by `id`) and [`memoryRepository.ts`](src/memory/memoryRepository.ts) |
 | `summarizeHistory.ts` | [`src/memory/summarizeHistory.ts`](src/memory/summarizeHistory.ts): compression and episodic summary |
 | `estimateTokens.ts` | [`src/memory/estimateTokens.ts`](src/memory/estimateTokens.ts): window budget, memory block budget and context measurement |
-| `maybeCompress.ts` | [`src/memory/maybeCompress.ts`](src/memory/maybeCompress.ts): cumulative summary of the older half, never splitting a question from its answer |
+| `maybeCompress.ts` | [`src/memory/maybeCompress.ts`](src/memory/maybeCompress.ts): cumulative summary of the older half, never splitting a question from its answer, triggered by tokens or by a full window |
 | `stitchContext.ts` | [`src/memory/stitchContext.ts`](src/memory/stitchContext.ts): client memory + session summary + recent messages |
 | `chatbot.ts` (memory in a chatbot) | [`src/chat/crmAssistant.ts`](src/chat/crmAssistant.ts) + [`src/cli/session.ts`](src/cli/session.ts) |
 | `validateInput.ts` / `validateOutput.ts` | [`src/guardrails/`](src/guardrails/) (+ `validateMemory.ts` for what gets saved) |

@@ -7,7 +7,7 @@ import { ClientRepository } from "../memory/clientRepository.ts";
 import { ContextWindow } from "../memory/contextWindow.ts";
 import { estimateTextTokens, estimateTokens } from "../memory/estimateTokens.ts";
 import { extractMemories, type ExtractionResult } from "../memory/extractMemories.ts";
-import { maybeCompress } from "../memory/maybeCompress.ts";
+import { maybeCompress, type CompressionResult } from "../memory/maybeCompress.ts";
 import { MemoryRepository } from "../memory/memoryRepository.ts";
 import { retrieveMemories, type RetrievalResult } from "../memory/retrieveMemories.ts";
 import { SessionRepository, type Session } from "../memory/sessionRepository.ts";
@@ -38,6 +38,8 @@ export type AssistantDeps = {
   answerPrefix?: string;
 };
 
+export type CompressionInfo = Pick<CompressionResult, "trigger" | "summarizedMessages" | "tokensBefore" | "tokensAfter">;
+
 export type TurnStatus = "respondida" | "entrada_bloqueada" | "saida_bloqueada" | "erro";
 
 export type TurnResult = {
@@ -49,7 +51,8 @@ export type TurnResult = {
   memoryBlock: string | null;
   /** Tokens estimados de tudo o que foi enviado ao modelo na geração (sistema + contexto + mensagem). */
   contextTokens: number;
-  compressed: boolean;
+  /** Compressão da memória curta feita nesta mensagem (null se não houve). */
+  compression: CompressionInfo | null;
   critique: CritiqueOutcome | null;
   extraction: ExtractionResult | null;
   extractionError: string | null;
@@ -59,7 +62,7 @@ export type TurnResult = {
  * Orquestra um atendimento com memória. Por mensagem:
  *  1. guardrail de entrada;
  *  2. recupera a memória de longo prazo relevante do cliente (e os resumos de atendimentos anteriores);
- *  3. comprime a memória de curto prazo se passar do orçamento de tokens;
+ *  3. comprime a memória de curto prazo se passar do orçamento de tokens ou se a janela estiver cheia;
  *  4. costura o contexto e gera a resposta (streaming + autocrítica + retentativas);
  *  5. guardrail de saída;
  *  6. grava a interação (pergunta + resposta juntas) e extrai/atualiza memórias de longo prazo.
@@ -142,7 +145,7 @@ export class CrmAssistant {
       retrieval: null,
       memoryBlock: null,
       contextTokens: 0,
-      compressed: false,
+      compression: null,
       critique: null,
       extraction: null,
       extractionError: null,
@@ -169,7 +172,7 @@ export class CrmAssistant {
     // 3. Memória de curto prazo (com compressão por resumo).
     let recent: Message[] = [];
     if (this.usesShortTerm) {
-      result.compressed = await this.compressIfNeeded();
+      result.compression = await this.compressIfNeeded();
       recent = this.window.getMessages();
     }
 
@@ -300,29 +303,37 @@ export class CrmAssistant {
     });
   }
 
-  private async compressIfNeeded(): Promise<boolean> {
+  private async compressIfNeeded(): Promise<CompressionInfo | null> {
     const session = this.session!;
     try {
       const compression = await maybeCompress({
         window: this.window,
         previousSummary: this.compressedSummary,
         maxTokens: SETTINGS.shortTerm.maxTokens,
+        maxMessages: SETTINGS.shortTerm.maxTurns * 2,
         summarize: (messages) =>
           withRetry(() => summarizeHistory(this.deps.llm, messages), retryPolicy(this.deps.out, "Falha na compressão", this.deps.sleep)),
       });
-      if (compression.compressed) {
-        this.compressedSummary = compression.summary;
-        this.sessions.saveCompression(session.id, compression.summary!, this.sessionMessages - this.window.size);
-        if (this.debug) {
-          this.deps.out.write(
-            `[Memória curta comprimida: ~${compression.tokensBefore} -> ~${compression.tokensAfter} tokens (parte antiga resumida)]\n`,
-          );
-        }
+      if (!compression.compressed) return null;
+
+      this.compressedSummary = compression.summary;
+      // Quantas mensagens do atendimento (desde o início) já estão cobertas pelo resumo: na retomada,
+      // só as posteriores voltam para a janela.
+      this.sessions.saveCompression(session.id, compression.summary!, this.sessionMessages - this.window.size);
+      if (this.debug) {
+        const reason = compression.trigger === "tokens" ? "passou do orçamento de tokens" : "janela cheia";
+        this.deps.out.write(
+          `[Memória curta comprimida (${reason}): ${compression.summarizedMessages} mensagens resumidas, ` +
+            `~${compression.tokensBefore} -> ~${compression.tokensAfter} tokens]
+`,
+        );
       }
-      return compression.compressed;
+      const { trigger, summarizedMessages, tokensBefore, tokensAfter } = compression;
+      return { trigger, summarizedMessages, tokensBefore, tokensAfter };
     } catch (error) {
-      this.deps.out.write(`[Compressão indisponível (${describeError(error)}). Seguindo só com a janela deslizante.]\n`);
-      return false;
+      this.deps.out.write(`[Compressão indisponível (${describeError(error)}). Seguindo só com a janela deslizante.]
+`);
+      return null;
     }
   }
 

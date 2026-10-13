@@ -95,6 +95,46 @@ describe("CrmAssistant: retomada do atendimento", () => {
   });
 });
 
+describe("CrmAssistant: compressão em uma conversa longa", () => {
+  it("resume a parte antiga, mantém o fato do início no contexto e retoma sem resumir de novo", async () => {
+    const longAnswer = (n: number) => `Resposta ${n}: ${"detalhe ".repeat(120)}`;
+    const { assistant, llm, db } = await createAssistant({
+      streams: Array.from({ length: 8 }, (_, i) => longAnswer(i + 1)),
+      completes: { resumo: ["Resumo: treinamento para 40 motoristas, à noite, no galpão de Canoas."] },
+    });
+    assistant.startSession("rotasul");
+
+    const results = [];
+    for (let i = 1; i <= 6; i++) results.push(await assistant.handle(`Mensagem ${i}${i === 1 ? ": são 40 motoristas, à noite, em Canoas." : ""}`));
+
+    const compressedAt = results.findIndex((r) => r.compression);
+    assert.ok(compressedAt > 0, "a compressão é acionada quando a conversa passa do orçamento");
+    const info = results[compressedAt]!.compression!;
+    assert.equal(info.trigger, "tokens");
+    assert.ok(info.tokensAfter < info.tokensBefore);
+
+    const lastCall = contents(llm.streamCalls.at(-1)!);
+    assert.ok(lastCall.includes("<resumo_atendimento_atual>"), "o resumo entra no contexto");
+    assert.ok(lastCall.includes("40 motoristas"), "o fato do início continua disponível, via resumo");
+    assert.ok(!lastCall.includes("Mensagem 1:"), "a mensagem antiga não vai mais literal");
+
+    const session = assistant.sessions.find(assistant.currentSession!.id)!;
+    assert.ok(session.compressedSummary && session.compressedUpto > 0, "o resumo fica salvo na sessão");
+
+    const resumed = new CrmAssistant({
+      llm: createScriptedLlm({}),
+      embedder: createLocalEmbedder(),
+      db,
+      out: createCapture(),
+      mode: "curta",
+      critique: false,
+      sleep: noSleep,
+    });
+    const restored = resumed.startSession("rotasul", session.id);
+    assert.equal(restored, 12 - session.compressedUpto, "na retomada voltam só as mensagens não resumidas");
+  });
+});
+
 describe("CrmAssistant: falhas não contaminam histórico nem memória", () => {
   it("erro na geração: nada é gravado", async () => {
     const { assistant, llm } = await createAssistant({ streams: [new HttpError(401)] });
