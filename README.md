@@ -1,5 +1,9 @@
 # posIAM03D02 - Assistente de CRM com Memória de Cliente
 
+🇺🇸 [Read in English](README.en.md)
+
+![Arquitetura de memória do assistente de CRM](assets/memory-architecture.png)
+
 Micro-capstone da disciplina 2 do módulo 3 (Pós em IA). Assistente de relacionamento de uma empresa B2B fictícia,
 a **NexoTech Serviços Gerenciados** (TI gerenciada: suporte, equipamentos, licenças, backup e redes). O assistente
 acompanha cada cliente ao longo do tempo e lembra **histórico de pedidos, preferências, problemas anteriores e
@@ -346,6 +350,7 @@ src/
   experiment/              cenários, juiz, execução e relatório da comparação
   demo/                    demonstração de erros e autocrítica (sem chave)
   utils/                   erros, retentativas
+assets/                    imagem da arquitetura
 data/seed/crm.json         clientes e memórias iniciais
 results/                   relatório e dados do experimento
 tests/                     testes automatizados (node:test)
