@@ -54,7 +54,7 @@ npm start              # opens a client conversation
 | `npm run experiment` | Runs the comparison across the 4 modes and writes `results/relatorio.md` | yes |
 | `npm run simulate` | Context evaluation: what reaches the model in each mode (simulated answers; see [results](#results-context-evaluation-simulation-no-api-key)) | **no** |
 | `npm run demo` | Demonstrates error handling and self-critique with a simulated model | **no** |
-| `npm test` | 41 automated tests (simulated model and embeddings) | **no** |
+| `npm test` | 42 automated tests (simulated model and embeddings) | **no** |
 | `npm run typecheck` | Type checking | no |
 
 `.env` variables: `OPENAI_API_KEY` (required), `OPENAI_MODEL` (optional, default `gpt-4o-mini`) and
@@ -267,9 +267,10 @@ This section answers the feedback from discipline 1: explain which errors are ha
 
 | Situation | Retry? | What the user sees | Effect on history and memory |
 |---|---|---|---|
-| HTTP 429 (rate/quota limit), 408, 409, 5xx, network failure, timeout (60s) or empty response | Yes: up to 3 attempts, exponential backoff 1s → 2s (cap 8s) + up to 20% jitter | `[Falha na geração: <cause>. Nova tentativa 2/3 em 1.1s...]`; if an attempt succeeds, the answer continues normally | Nothing changes until the answer is out |
+| HTTP 429 (rate limit), 408, 409, 5xx, network failure, timeout (60s) or empty response | Yes: up to 3 attempts, exponential backoff 1s → 2s (cap 8s) + up to 20% jitter | `[Falha na geração: <cause>. Nova tentativa 2/3 em 1.1s...]`; if an attempt succeeds, the answer continues normally | Nothing changes until the answer is out |
 | Same error on all 3 attempts | (exhausted) | `[Erro] <cause in plain language>` + "the message was not saved to history or memory, try again" | Nothing is saved |
 | HTTP 401 (invalid key), 403, 404 (unknown model), 400 | No (retrying won't help) | `[Erro] Chave da API inválida ou ausente. Confira OPENAI_API_KEY no arquivo .env.` (specific message per status code) | Nothing is saved |
+| HTTP 429 for lack of credit (`insufficient_quota`) | No (only adding credit fixes it) | `[Erro] A conta da OpenAI está sem crédito. Adicione créditos em platform.openai.com (Settings > Billing) e tente novamente.` | Nothing is saved |
 | Embeddings fail during retrieval | Yes (3 attempts) | `[Memória: busca semântica indisponível (...). Usando só palavras-chave.]` | Conversation continues (degraded mode) |
 | Embeddings fail for a new memory | Yes (3 attempts) | Nothing (silent) | Memory saved without a vector; filled in when the CLI starts (`ensureEmbeddings`) |
 | Compression (summary) fails | Yes (3 attempts) | `[Compressão indisponível (...). Seguindo só com a janela deslizante.]` | The sliding window keeps limiting the context |
@@ -310,7 +311,7 @@ The demo runs the application's real flow with a simulated model that triggers e
 ```
 1. Erro temporário (HTTP 429) com retentativa bem-sucedida
 Você: Qual é a vigência das nossas licenças do Microsoft 365?
-Assistente: [Falha na geração: Limite de requisições ou de cota atingido. Aguarde um pouco e tente novamente. Nova tentativa 2/3 em 1.2s...]
+Assistente: [Falha na geração: Limite de requisições atingido. Aguarde um pouco e tente novamente. Nova tentativa 2/3 em 1.2s...]
 As 50 licenças Microsoft 365 Business Standard renovadas em 15/03/2026 valem até 14/03/2027.
 => status: respondida | mensagens gravadas no histórico: 2
 

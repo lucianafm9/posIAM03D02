@@ -55,6 +55,12 @@ describe("classificação e mensagens de erro", () => {
     assert.equal(isRetryableError(Object.assign(new Error("x"), { code: "ECONNRESET" })), true);
   });
 
+  it("falta de crédito (429 insufficient_quota) não é retentável e tem mensagem própria", () => {
+    const noCredit = Object.assign(new HttpError(429), { code: "insufficient_quota" });
+    assert.equal(isRetryableError(noCredit), false);
+    assert.match(describeError(noCredit), /sem crédito/);
+  });
+
   it("traduz o erro para o usuário", () => {
     assert.match(describeError(new HttpError(401)), /OPENAI_API_KEY/);
     assert.match(describeError(new HttpError(429)), /Limite/);
